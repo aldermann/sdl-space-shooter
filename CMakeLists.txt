@@ -1,8 +1,9 @@
 # Define the project name
-project(SDLSimpleTest)
+project(sdl-ball)
 
 # Set the cmake minimum version to 3.5.1
 cmake_minimum_required(VERSION 3.5.1)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
@@ -10,38 +11,53 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
 # Add all c++ source files under the src directory
-file(GLOB SOURCES "src/*.cpp")
-add_executable(${PROJECT_NAME} ${SOURCES})
+file(GLOB_RECURSE SOURCES
+        LIST_DIRECTORIES true
+        "src/*.cpp"
+        )
 
+set(BINARY_NAME ${PROJECT_NAME})
+add_executable(${BINARY_NAME} ${SOURCES} src/main.cpp src/utils/timer.cpp src/utils/timer.hpp src/geometry/vector.cpp src/geometry/point.cpp)
 # Add all headers files under the include directory
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_include_directories(${BINARY_NAME} PRIVATE src)
 
 # Add compiler errors/warnings flags
-target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
-target_compile_options(${PROJECT_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror>)
+target_compile_options(${BINARY_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
+target_compile_options(${BINARY_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror -Wno-unused-parameter>)
 
 
 # Add SDL2 library
 find_package(SDL2 REQUIRED)
-target_link_libraries(${PROJECT_NAME} SDL2::Main)
+target_link_libraries(${BINARY_NAME} SDL2::Main)
 
+find_package(Boost REQUIRED COMPONENTS system)
+if (Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    target_link_libraries(${BINARY_NAME} ${Boost_LIBRARIES})
+
+
+endif ()
+
+if (APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GNU_SOURCE")
+endif ()
 # Add SDL2_image library
 #find_package(SDL2_image REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::Image)
+#target_link_libraries(${BINARY_NAME} SDL2::Image)
 
 # Add SDL2_ttf library
 #find_package(SDL2_ttf REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::TTF)
+#target_link_libraries(${BINARY_NAME} SDL2::TTF)
 
 # Add SDL2_net library
 #find_package(SDL2_net REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::Net)
+#target_link_libraries(${BINARY_NAME} SDL2::Net)
 
 # Add SDL2_mixer library
 #find_package(SDL2_mixer REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::Mixer)
+#target_link_libraries(${BINARY_NAME} SDL2::Mixer)
 
 # Add SDL2_gfx library
-#find_package(SDL2_gfx REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::GFX)
+find_package(SDL2_gfx REQUIRED)
+target_link_libraries(${BINARY_NAME} SDL2::GFX)
 

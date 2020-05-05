@@ -1,101 +1,76 @@
-#include <iostream>
-#include <algorithm>
-
 #include <SDL.h>
 
-#define SCREEN_WIDTH    800
-#define SCREEN_HEIGHT   600
+#include <algorithm>
+#include <iostream>
+#include <utils/timer.hpp>
 
-int main(int argc, char *argv[]) {
-    // Unused argc, argv
-    (void) argc;
-    (void) argv;
-
-    // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cout << "SDL could not be initialized!" << std::endl
-                  << "SDL_Error: " << SDL_GetError() << std::endl;
-        return 0;
-    }
-
-#if defined linux && SDL_VERSION_ATLEAST(2, 0, 8)
-    // Disable compositor bypass
-    if(!SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0"))
-    {
-        std::cout << "SDL can not disable compositor bypass!" << std::endl;
-        return 0;
-    }
-#endif
-
-    // Create window
-    SDL_Window *window = SDL_CreateWindow("Basic C++ SDL project",
-                                          SDL_WINDOWPOS_UNDEFINED,
-                                          SDL_WINDOWPOS_UNDEFINED,
-                                          SCREEN_WIDTH, SCREEN_HEIGHT,
-                                          SDL_WINDOW_SHOWN);
-    if (!window) {
-        std::cout << "Window could not be created!" << std::endl
-                  << "SDL_Error: " << SDL_GetError() << std::endl;
-    } else {
-        // Create renderer
-        SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        if (!renderer) {
-            std::cout << "Renderer could not be created!" << std::endl
-                      << "SDL_Error: " << SDL_GetError() << std::endl;
-        } else {
-            // Declare rect of square
-            SDL_Rect squareRect;
-
-            // Square dimensions: Half of the min(SCREEN_WIDTH, SCREEN_HEIGHT)
-            squareRect.w = std::min(SCREEN_WIDTH, SCREEN_HEIGHT) / 2;
-            squareRect.h = std::min(SCREEN_WIDTH, SCREEN_HEIGHT) / 2;
-
-            // Square position: In the middle of the screen
-            squareRect.x = SCREEN_WIDTH / 2 - squareRect.w / 2;
-            squareRect.y = SCREEN_HEIGHT / 2 - squareRect.h / 2;
+#include "game/game.hpp"
+#include "render/renderer.hpp"
+#include "utils/error/sdl_error.hpp"
 
 
-            // Event loop exit flag
-            bool quit = false;
+int main() {
 
-            // Event loop
-            while (!quit) {
-                SDL_Event e;
+  if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+    std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+    return 1;
+  }
 
-                // Wait indefinitely for the next available event
-                SDL_WaitEvent(&e);
+  SDL_Window *window = SDL_CreateWindow("Ball emulator",
+                                        SDL_WINDOWPOS_CENTERED,
+                                        SDL_WINDOWPOS_CENTERED,
+                                        640,
+                                        480,
+                                        SDL_WINDOW_SHOWN);
+  if (window == nullptr) {
+    std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+    return 1;
+  }
 
-                // User requests quit
-                if (e.type == SDL_QUIT) {
-                    quit = true;
-                }
 
-                // Initialize renderer color white for the background
-                SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  Renderer *renderer = Renderer::createInstance(window);
+  Color backgroundColor(0xffffff);
+  Game game;
 
-                // Clear screen
-                SDL_RenderClear(renderer);
+  Geometry::Point position(50, 350);
 
-                // Set renderer color red to draw the square
-                SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
+  Color ballColor(0xff00ff);
+  GameObject ball = GameObject::createRoundObject(position, 1, 20, ballColor);
+  game.addObject(&ball);
+  ball.motion.setGravity(200);
+  ball.motion.setVelocity({100, -400});
 
-                // Draw filled square
-                SDL_RenderFillRect(renderer, &squareRect);
+  //  int fps = 5;
+  //  int milisecond_per_frame = 1000 / fps;
 
-                // Update screen
-                SDL_RenderPresent(renderer);
-            }
+  Timer timer;
 
-            // Destroy renderer
-            SDL_DestroyRenderer(renderer);
+  bool quit = false;
+  timer.start();
+  while (!quit) {
+    try {
+      SDL_Event e;
+      SDL_PollEvent(&e);
+      while (SDL_PollEvent(&e) != 0) {
+        if (e.type == SDL_QUIT) {
+          quit = true;
         }
-
-        // Destroy window
-        SDL_DestroyWindow(window);
+      }
+      double time = timer.elapsedSecondsHR();
+      timer.reset();
+      renderer->clearScreen(backgroundColor);
+      game.render(time);
+      renderer->present();
+      SDL_Delay(20);
+    } catch (AppError &error) {
+      std::cerr << error;
+      if (error.severity == FATAL) {
+        exit(-1);
+      }
     }
-
-    // Quit SDL
-    SDL_Quit();
-
-    return 0;
+  }
+  Renderer::releaseInstance();
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+  return 0;
 }
