@@ -3,9 +3,11 @@
 //
 
 #include "error.hpp"
+
 #include <iostream>
 #include <utility>
-AppError::AppError(std::string message, const Severity severity) : message(std::move(message)), severity(severity) {
+AppError::AppError(std::string message, const Severity severity)
+    : message(std::move(message)), severity(severity) {
   this->trace = boost::stacktrace::stacktrace();
 }
 
@@ -14,3 +16,4 @@ std::ostream &operator<<(std::ostream &os, const AppError &err) {
 }
 
 FatalAppError::FatalAppError(std::string message) : AppError(std::move(message), FATAL) {}
+WarningAppError::WarningAppError(std::string message) : AppError(std::move(message), WARNING) {}

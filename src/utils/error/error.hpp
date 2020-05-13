@@ -25,3 +25,8 @@ class FatalAppError : public AppError {
 public:
   explicit FatalAppError(std::string message);
 };
+
+class WarningAppError : public AppError {
+public:
+  explicit WarningAppError(std::string message);
+};

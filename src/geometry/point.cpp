@@ -7,7 +7,13 @@
 namespace Geometry {
   Point::Point(double x, double y) : x(x), y(y) {}
 
-  double Point::distance(Segment &other) {
+  Point::Point() : x(0), y(0) {}
+
+  Point::Point(const Point &other) = default;
+
+  Point &Point::operator=(const Point &other) = default;
+
+  double Point::distance(Segment &other) const {
     Point &a = other.a;
     Point &b = other.b;
     return std::abs((b.x - a.x) * this->x - (b.x - a.x) * this->y + a.y * b.x - a.x * b.y) /
@@ -26,10 +32,28 @@ namespace Geometry {
     return *this + (-direction);
   }
 
-  Point::Point() : x(0), y(0) {}
-
   std::ostream &operator<<(std::ostream &os, const Point &p) {
     return os << "Point (" << p.x << "; " << p.y << ")";
   }
+
+  Point Point::withOrigin(const Point &other) const {
+    return *this + Vector(other);
+  }
+
+  Point Point::relativeTo(const Point &other) const {
+    return *this - Vector(other);
+  }
+
+  double Point::projectionValue(const Vector &vector) const {
+    return Vector(*this) * vector.normalized();
+  }
+
+  Point Point::projection(const Segment &s) const {
+    Vector v1(s.a, *this);
+    Vector vs(s);
+    Vector vProj = v1.projection(vs);
+    return s.a + vProj;
+  }
+
 
 }// namespace Geometry

@@ -1,5 +1,5 @@
 # Define the project name
-project(sdl-ball)
+project(sdl-ball CXX)
 
 # Set the cmake minimum version to 3.5.1
 cmake_minimum_required(VERSION 3.5.1)
@@ -9,18 +9,35 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 # Add SDL2 CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
-
-# Add all c++ source files under the src directory
-file(GLOB_RECURSE SOURCES
-        LIST_DIRECTORIES true
-        "src/*.cpp"
-        )
-
+include_directories(${PROJECT_SOURCE_DIR}/src)
+set(SOURCE_FILES src/main.cpp
+        src/game/game.cpp
+        src/geometry/geometry.cpp src/geometry/point.cpp src/geometry/point.cpp src/geometry/shape.cpp src/geometry/vector.cpp
+        src/number/number.cpp
+        src/object/object.cpp
+        src/object/bounding_box/bounding_box.cpp src/object/bounding_box/circle_box.cpp src/object/bounding_box/rectangle_box.cpp
+        src/object/display_box/display_box.cpp
+        src/physics/motion.cpp
+        src/render/renderer.cpp
+        src/render/color.cpp
+        src/utils/timer.cpp
+        src/utils/error/error.cpp src/utils/error/sdl_error.cpp
+        src/game/game.hpp
+        src/geometry/geometry.hpp
+        src/number/number.hpp
+        src/object/object.hpp
+        src/object/bounding_box/bounding_box.hpp
+        src/object/display_box/display_box.hpp
+        src/physics/motion.hpp
+        src/render/renderer.hpp
+        src/render/color.hpp
+        src/utils/timer.hpp
+        src/utils/error/error.hpp src/utils/error/sdl_error.hpp
+        src/utils/utils.cpp src/utils/utils.hpp)
+message("What ${SOURCES}")
 set(BINARY_NAME ${PROJECT_NAME})
-add_executable(${BINARY_NAME} ${SOURCES} src/main.cpp src/utils/timer.cpp src/utils/timer.hpp src/geometry/vector.cpp src/geometry/point.cpp)
-# Add all headers files under the include directory
-target_include_directories(${BINARY_NAME} PRIVATE src)
-
+add_executable(${BINARY_NAME} ${SOURCE_FILES})
+set_target_properties(${BINARY_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 # Add compiler errors/warnings flags
 target_compile_options(${BINARY_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
 target_compile_options(${BINARY_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror -Wno-unused-parameter>)

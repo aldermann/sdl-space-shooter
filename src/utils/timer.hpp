@@ -8,12 +8,12 @@ public:
   void start();
   void stop();
   double elapsedMilliseconds();
-  double elapsedSeconds();
   double elapsedSecondsHR();
-  void reset();
+  void tick();
+  double elapsedSecondsHRSinceTick();
+  double elapsedMillisecondsSinceTick();
 
 private:
-  std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
-  std::chrono::time_point<std::chrono::high_resolution_clock> m_EndTime;
-  bool m_bRunning = false;
+  std::chrono::time_point<std::chrono::high_resolution_clock> startTime, endTime, lastTick;
+  bool running = false;
 };

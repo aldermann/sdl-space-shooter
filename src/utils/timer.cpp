@@ -7,43 +7,36 @@
 using namespace std::chrono;
 
 void Timer::start() {
-  m_StartTime = high_resolution_clock::now();
-  m_bRunning = true;
+  startTime = high_resolution_clock::now();
+  lastTick = startTime;
+  running = true;
 }
 
 void Timer::stop() {
-  m_EndTime = high_resolution_clock::now();
-  m_bRunning = false;
+  endTime = high_resolution_clock::now();
+  running = false;
 }
 
 double Timer::elapsedSecondsHR() {
-  time_point<high_resolution_clock> endTime;
-
-  if (m_bRunning) {
-    endTime = high_resolution_clock::now();
-  } else {
-    endTime = m_EndTime;
-  }
-
-  return duration_cast<duration<double>>(endTime - m_StartTime).count();
+  auto now = high_resolution_clock::now();
+  return duration_cast<duration<double>>(now - startTime).count();
 }
 
 double Timer::elapsedMilliseconds() {
-  time_point<high_resolution_clock> endTime;
-
-  if (m_bRunning) {
-    endTime = high_resolution_clock::now();
-  } else {
-    endTime = m_EndTime;
-  }
-
-  return duration_cast<milliseconds>(endTime - m_StartTime).count();
+  auto now = high_resolution_clock::now();
+  return duration_cast<milliseconds>(now - startTime).count();
 }
 
-void Timer::reset() {
-  m_StartTime = high_resolution_clock::now();
+double Timer::elapsedSecondsHRSinceTick() {
+  auto now = high_resolution_clock::now();
+  return duration_cast<duration<double>>(now - lastTick).count();
 }
 
-double Timer::elapsedSeconds() {
-  return elapsedMilliseconds() / 1000.0;
+double Timer::elapsedMillisecondsSinceTick() {
+  auto now = high_resolution_clock::now();
+  return duration_cast<milliseconds>(now - lastTick).count();
+}
+
+void Timer::tick() {
+  lastTick = high_resolution_clock::now();
 }

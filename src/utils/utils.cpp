@@ -1,4 +1,7 @@
 //
+// Created by Trần Công Việt An on 6/5/20.
+//
+//
 // Created by Trần Công Việt An on 1/5/20.
 //
 
@@ -11,4 +14,18 @@ void disable_compositor() {
     std::exit(-1);
   }
 #endif
+}
+
+double signum(double a) {
+  if (a < 0) {
+    return -1;
+  }
+  if (a > 0) {
+    return 1;
+  }
+  return 0;
+}
+
+bool doubleEqual(const double &a, const double &b) {
+  return (abs(a - b) < 1e-6);
 }

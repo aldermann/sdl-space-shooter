@@ -7,12 +7,17 @@
 namespace Geometry {
   Vector::Vector(double x, double y) : x(x), y(y) {}
 
-  Vector::Vector(Point a) : x(a.x), y(a.y) {}
+  Vector::Vector(const Point &a) : x(a.x), y(a.y) {}
 
-  Vector::Vector(Point a, Point b) : Vector(b.x - a.x, b.y - a.y) {}
+  Vector::Vector(const Point &a, const Point &b) : Vector(b.x - a.x, b.y - a.y) {}
+
+  Vector::Vector(const Segment &s) : Vector(s.a, s.b) {}
+
+  Vector::Vector(const Vector &v) : Vector(v.x, v.y) {}
 
   Vector::Vector() : x(0), y(0) {}
 
+  Vector &Vector::operator=(const Vector &other) = default;
 
   Vector Vector::operator-() const {
     return {-x, -y};
@@ -30,16 +35,20 @@ namespace Geometry {
     return {this->x * scale, this->y * scale};
   }
 
+  Vector operator*(const double &scale, const Vector &v) {
+    return v * scale;
+  }
+
   Vector Vector::operator/(const double &scale) const {
     return {this->x / scale, this->y / scale};
   }
 
-  double Vector::X(const Vector &other) const {
-    return this->x * other.y - this->y * other.x;
+  double Vector::crossProduct(const Vector &a, const Vector &b) {
+    return a.x * b.y - a.y * b.x;
   }
 
   double Vector::operator*(const Vector &other) const {
-    return this->x * other.x + this->y * other.y;
+    return dotProduct(*this, other);
   }
 
   Vector Vector::perpendicular() const {
@@ -57,4 +66,20 @@ namespace Geometry {
   Vector Vector::normalized() const {
     return *this / this->length();
   }
+
+  double Vector::dotProduct(const Vector &a, const Vector &b) {
+    return a.x * b.x + a.y * b.y;
+  }
+
+  Vector Vector::projection(const Vector &other) const {
+    const Vector otherProjection = other.normalized();
+    return (*this) * otherProjection * otherProjection;
+  }
+
+  Vector Vector::addLength(const double &r) const {
+    double len = length();
+    return ((*this) / len) * (len + r);
+  }
+
+
 }// namespace Geometry

@@ -6,6 +6,7 @@
 
 
 #include <physics/motion.hpp>
+#include <unordered_set>
 
 #include "./bounding_box/bounding_box.hpp"
 #include "./display_box/display_box.hpp"
@@ -17,17 +18,34 @@ public:
   Physics::Motion motion;
   Geometry::Point position;
 
-
-  GameObject(Geometry::Point position,
+  GameObject(const Geometry::Point &pos,
              BoundingBox::Box *bounding,
              DisplayBox::Box *display,
-             double mass);
+             double mass,
+             bool immovable);
   ~GameObject();
 
 public:
-  void render(double time);
-  static GameObject createRoundObject(Geometry::Point position,
+  void render(double time, bool renderWireFrame, bool renderMotion);
+  bool checkCollision(GameObject *other);
+  static void handleCollision(GameObject *a, GameObject *b);
+  static GameObject createRectangleObject(const Geometry::Point &pos,
+                                          double w,
+                                          double h,
+                                          double angle,
+                                          double mass,
+                                          const Color &color);
+
+  static GameObject createRoundObject(const Geometry::Point &pos,
                                       double mass,
                                       double radius,
-                                      Color color);
+                                      const Color &color);
+  static GameObject createImmovableRectangleObject(const Geometry::Point &pos,
+                                            double w,
+                                            double h,
+                                            double angle,
+                                            const Color &color);
+  static GameObject createRoundImmovableObject(const Geometry::Point &pos,
+                                        double radius,
+                                        const Color &color);
 };

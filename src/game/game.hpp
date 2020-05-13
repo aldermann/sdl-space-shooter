@@ -8,11 +8,21 @@
 #include <object/object.hpp>
 #include <unordered_map>
 class Game {
-  std::unordered_map<int, GameObject *> objectList;
+  std::unordered_map<int, GameObject*> objectList;
+  bool debugMode;
+
+private:
+  explicit Game(bool debugMode);
+  void render(double time);
+  void checkCollision();
 
 public:
-  Game();
-  int addObject(GameObject *object);
-  void removeObject(const int key);
-  void render(double time);
+  static Game* instance;
+  int addObject(GameObject* object);
+  void removeObject(int key);
+  void loop();
+  static Game* getInstance();
+  static Game* createInstance(bool);
+  static void releaseInstance();
+  static void waitIndefinitely();
 };

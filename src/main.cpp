@@ -1,76 +1,45 @@
 #include <SDL.h>
 
-#include <algorithm>
 #include <iostream>
-#include <utils/timer.hpp>
+#include <utils/error/error.hpp>
 
 #include "game/game.hpp"
 #include "render/renderer.hpp"
-#include "utils/error/sdl_error.hpp"
 
 
 int main() {
-
-  if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-    std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-    return 1;
+  try {
+    auto game = Game::createInstance(true);
+    Renderer::createInstance();
+    Palette* palette = Palette::init();
+    GameObject ball = GameObject::createRoundObject({200, 200}, 5, 30, palette->Red);
+    GameObject ball2 = GameObject::createRoundObject({400, 300}, 5, 30, palette->Red);
+    GameObject ball3 = GameObject::createRoundObject({400, 600}, 5, 30, palette->Red);
+    //    GameObject ball4 = GameObject::createRoundObject({590, 200}, 5, 30, palette->Red);
+    GameObject wall1 =
+            GameObject::createImmovableRectangleObject({600, 100}, 1000, 100, 0, palette->Blue);
+    GameObject wall2 =
+            GameObject::createImmovableRectangleObject({600, 700}, 1000, 100, 0, palette->Blue);
+    GameObject wall3 =
+            GameObject::createImmovableRectangleObject({100, 400}, 100, 600, 0, palette->Blue);
+    GameObject wall4 =
+            GameObject::createImmovableRectangleObject({1100, 400}, 100, 600, 0, palette->Blue);
+    game->addObject(&wall1);
+    game->addObject(&wall2);
+    game->addObject(&wall3);
+    game->addObject(&wall4);
+    game->addObject(&ball);
+    game->addObject(&ball2);
+    game->addObject(&ball3);
+    ball.motion.setVelocity({150, -5});
+    ball2.motion.setVelocity({0, 50});
+    ball3.motion.setVelocity({0, -50});
+    //    ball4.motion.setVelocity({-100, 0});
+    game->loop();
+    Game::releaseInstance();
+    Renderer::releaseInstance();
+    SDL_Quit();
+  } catch (const AppError& err) {
+    std::cout << err << '\n';
   }
-
-  SDL_Window *window = SDL_CreateWindow("Ball emulator",
-                                        SDL_WINDOWPOS_CENTERED,
-                                        SDL_WINDOWPOS_CENTERED,
-                                        640,
-                                        480,
-                                        SDL_WINDOW_SHOWN);
-  if (window == nullptr) {
-    std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-    return 1;
-  }
-
-
-  Renderer *renderer = Renderer::createInstance(window);
-  Color backgroundColor(0xffffff);
-  Game game;
-
-  Geometry::Point position(50, 350);
-
-  Color ballColor(0xff00ff);
-  GameObject ball = GameObject::createRoundObject(position, 1, 20, ballColor);
-  game.addObject(&ball);
-  ball.motion.setGravity(200);
-  ball.motion.setVelocity({100, -400});
-
-  //  int fps = 5;
-  //  int milisecond_per_frame = 1000 / fps;
-
-  Timer timer;
-
-  bool quit = false;
-  timer.start();
-  while (!quit) {
-    try {
-      SDL_Event e;
-      SDL_PollEvent(&e);
-      while (SDL_PollEvent(&e) != 0) {
-        if (e.type == SDL_QUIT) {
-          quit = true;
-        }
-      }
-      double time = timer.elapsedSecondsHR();
-      timer.reset();
-      renderer->clearScreen(backgroundColor);
-      game.render(time);
-      renderer->present();
-      SDL_Delay(20);
-    } catch (AppError &error) {
-      std::cerr << error;
-      if (error.severity == FATAL) {
-        exit(-1);
-      }
-    }
-  }
-  Renderer::releaseInstance();
-  SDL_DestroyWindow(window);
-  SDL_Quit();
-  return 0;
 }

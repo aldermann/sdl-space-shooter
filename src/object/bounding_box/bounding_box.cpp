@@ -5,47 +5,31 @@
 #include "bounding_box.hpp"
 
 #include <iostream>
+#include <render/renderer.hpp>
 
 namespace BoundingBox {
   // Box
   Box::~Box() = default;
 
-  // CircleBox
-  CircleBox::~CircleBox() = default;
-
-  CircleBox::CircleBox(Geometry::Point offset, double radius) : circle(offset, radius) {}
-
-  CircleBox::CircleBox(double radius) : circle(radius) {}
-
-  bool CircleBox::checkCollision(Geometry::Point &position,
-                                 Geometry::Point &otherPosition,
-                                 CircleBox &otherBox) {
-    Geometry::Circle thisCircle = circle + Geometry::Vector(position);
-    Geometry::Circle otherCircle = otherBox.circle + Geometry::Vector(otherPosition);
-    double dist = thisCircle.origin.distance(otherCircle.origin);
-    return dist <= thisCircle.radius + otherCircle.radius;
+  bool Box::checkCollision(Geometry::Point &position,
+                           Geometry::Point &otherPosition,
+                           Box *otherBox) {
+    switch (otherBox->getShape()) {
+      case Rectangle:
+        return checkCollisionRect(position, otherPosition, (RectangleBox *) otherBox);
+      case Circle:
+        return checkCollisionCirc(position, otherPosition, (CircleBox *) otherBox);
+    }
   }
 
-  void CircleBox::print() {
-    std::cout << "Circle radius " << circle.radius << "; Circle origin " << circle.origin.x << " ; "
-              << circle.origin.y << "\n";
+  Geometry::Vector Box::normalCollisionVector(Geometry::Point &pos,
+                                              Geometry::Point &otherPos,
+                                              Box *otherBox) {
+    switch (otherBox->getShape()) {
+      case Rectangle:
+        return normalCollisionVectorRect(pos, otherPos, (RectangleBox *) otherBox);
+      case Circle:
+        return normalCollisionVectorCirc(pos, otherPos, (CircleBox *) otherBox);
+    }
   }
-
-  Shape CircleBox::getShape() {
-    return Circle;
-  }
-
-  bool CircleBox::checkCollision(Geometry::Point &position,
-                                 Geometry::Point &otherPosition,
-                                 RectangleBox &other) {
-    return false;
-  }
-  Geometry::Vector CircleBox::normalCollisionVector(RectangleBox &other) {
-    return {};
-  }
-  Geometry::Vector CircleBox::normalCollisionVector(CircleBox &other) {
-    return Geometry::Vector(this->circle.origin, other.circle.origin).normalized();
-  }
-
-
 }// namespace BoundingBox
