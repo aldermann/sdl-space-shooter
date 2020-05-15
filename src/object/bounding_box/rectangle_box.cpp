@@ -47,7 +47,10 @@ namespace BoundingBox {
     int signumW = dInterval(-wLen, wLen).compare(wProj);
     int signumH = dInterval(-hLen, hLen).compare(hProj);
     if (signumH == 0 && signumW == 0) {
-      return Geometry::Vector(rectCenter, circleCenter).normalized();
+      if (wLen - std::abs(wProj) < hLen - std::abs(hProj)) {
+        return (rect.w * signum(hProj)).normalized();
+      }
+      return (rect.h * signum(hProj)).normalized();
     }
     if (signumH != 0 && signumW == 0) {
       return (rect.h * signumH).normalized();

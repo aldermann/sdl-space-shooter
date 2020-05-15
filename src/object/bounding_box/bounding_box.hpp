@@ -18,8 +18,8 @@ namespace BoundingBox {
     virtual Shape getShape() = 0;
     virtual void render(Geometry::Point &position) = 0;
     bool checkCollision(Geometry::Point &position, Geometry::Point &otherPosition, Box *otherBox);
-    Geometry::Vector normalCollisionVector(Geometry::Point &pos,
-                                           Geometry::Point &otherPos,
+    Geometry::Vector normalCollisionVector(const Geometry::Point &pos,
+                                           const Geometry::Point &otherPos,
                                            Box *otherBox);
 
     virtual bool checkCollisionCirc(const Geometry::Point &position,

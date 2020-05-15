@@ -7,53 +7,75 @@
 #include <iostream>
 #include <utils/error/error.hpp>
 #include <utils/timer.hpp>
-Game::Game(bool debugMode) : objectList(), debugMode(debugMode) {}
-Game *Game::instance = nullptr;
+GameManager::GameManager(bool debugMode) : objectList(), debugMode(debugMode) {
+  /// Game manager:
+  /// The game manager is a singleton (only one instance can exist)
+  /// It manage various aspect of the game (renderer rendering loop, fps, game objects, ...)
+}
+GameManager *GameManager::instance = nullptr;
 
-Game *Game::createInstance(bool debugMode) {
-  if (Game::instance == nullptr) {
-    Game::instance = new Game(debugMode);
+GameManager *GameManager::createInstance(bool debugMode) {
+  ///
+  /// new game instance
+  /// @param [bool] debugMode: set to true to draw some additional debugging tool
+  ///
+  if (GameManager::instance == nullptr) {
+    GameManager::instance = new GameManager(debugMode);
   }
-  return Game::instance;
+  Renderer::createInstance();
+  Palette::init();
+  return GameManager::instance;
 }
 
-Game *Game::getInstance() {
-  if (Game::instance == nullptr) {
+GameManager *GameManager::getInstance() {
+  /**
+   * Get the current instance
+   * Will throw a FatalAppError if the game instance hasn't been initialized yet
+   */
+  if (GameManager::instance == nullptr) {
     throw FatalAppError("Game instance hasn't been initialized yet");
   }
-  return Game::instance;
+  return GameManager::instance;
 }
 
-void Game::releaseInstance() {
-  if (Game::instance == nullptr) {
+void GameManager::releaseInstance() {
+  /**
+   * Delete the current instance
+   * Will throw a FatalAppError if the game instance hasn't been initialized yet
+   */
+  if (GameManager::instance == nullptr) {
     throw FatalAppError("Game instance hasn't been initialized yet");
   }
-  delete Game::instance;
+  Renderer::releaseInstance();
+  delete GameManager::instance;
 }
 
-int Game::addObject(GameObject *object) {
+int GameManager::addObject(GameObject *object) {
+  /**
+   * Add a
+   * Will throw a FatalAppError if the game instance hasn't been initialized yet
+   */
   int key = (int) random();
   objectList.insert(std::make_pair(key, object));
   return key;
 }
 
-void Game::removeObject(const int key) {
+void GameManager::removeObject(const int key) {
   objectList.erase(key);
 }
 
-void Game::render(double time) {
+void GameManager::render(double time) {
   for (std::pair<int, GameObject *> it : objectList) {
     it.second->render(time, debugMode, debugMode);
   }
 }
 
-void Game::checkCollision() {
+void GameManager::checkCollision() {
   for (std::pair<int, GameObject *> it : objectList) {
     for (std::pair<int, GameObject *> it2 : objectList) {
       if (it2.first < it.first) {
         GameObject *ob1 = it.second, *ob2 = it2.second;
         if (ob1->checkCollision(ob2)) {
-          std::cout << ob1->position << ' ' << ob2->position << '\n';
           GameObject::handleCollision(ob1, ob2);
         }
       }
@@ -61,7 +83,7 @@ void Game::checkCollision() {
   }
 }
 
-void Game::waitIndefinitely() {
+void GameManager::waitIndefinitely() {
   while (true) {
     SDL_Event a;
     SDL_WaitEvent(&a);
@@ -71,11 +93,12 @@ void Game::waitIndefinitely() {
   }
 }
 
-void Game::loop() {
+void GameManager::loop() {
   Timer timer;
   bool quit = false;
   timer.start();
   long long frame = 0;
+  double last_frame_duration = 0.1;
   Renderer *renderer = Renderer::getInstance();
   while (!quit) {
     try {
@@ -86,12 +109,12 @@ void Game::loop() {
           quit = true;
         }
       }
-      double time = timer.elapsedSecondsHRSinceTick();
       timer.tick();
       renderer->clearScreen(Palette::get()->White);
-      render(time);
+      render(last_frame_duration);
       checkCollision();
       renderer->present();
+      last_frame_duration = timer.elapsedSecondsHRSinceTick();
       ++frame;
     } catch (AppError &error) {
       std::cerr << error;

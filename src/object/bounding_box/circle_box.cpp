@@ -35,14 +35,14 @@ namespace BoundingBox {
   Geometry::Vector CircleBox::normalCollisionVectorRect(const Geometry::Point &pos,
                                                         const Geometry::Point &otherPos,
                                                         RectangleBox *otherBox) {
-    return {};
+    return otherBox->normalCollisionVector(otherPos, pos, this);
   }
   Geometry::Vector CircleBox::normalCollisionVectorCirc(const Geometry::Point &pos,
                                                         const Geometry::Point &otherPos,
                                                         CircleBox *other) {
     return -Geometry::Vector(pos.withOrigin(circle.center),
-                            otherPos.withOrigin(other->circle.center))
-            .normalized();
+                             otherPos.withOrigin(other->circle.center))
+                    .normalized();
   }
   void CircleBox::render(Geometry::Point &position) {
     Renderer *renderer = Renderer::getInstance();

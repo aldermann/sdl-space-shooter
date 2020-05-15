@@ -7,19 +7,24 @@
 
 #include "geometry/geometry.hpp"
 namespace Physics {
-  class Motion {
+  class MotionState {
   public:
-    Motion();
-    explicit Motion(double mass, bool immovable);
+    MotionState();
+    explicit MotionState(const Geometry::Point &position, double mass, bool immovable);
 
+    Geometry::Point position;
     Geometry::Vector velocity, acceleration;
     double mass;
     bool immovable;
 
-    Geometry::Point move(const Geometry::Point &p, double t);
+    void move(double t);
     void setVelocity(const Geometry::Vector &v);
     void setGravity(double g);
-    Geometry::Vector calculateElasticCollision(Motion &other, const Geometry::Vector &normalVec) const;
-    void render(const Geometry::Point &p);
+    Geometry::Vector calculateCollision(MotionState &other,
+                                               const Geometry::Vector &normalVec) const;
+    void render(const Geometry::Point &p) const;
+    void setDrag(const float &coefficient);
   };
+
+
 }// namespace Physics

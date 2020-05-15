@@ -15,8 +15,7 @@ class GameObject {
 public:
   BoundingBox::Box *boundingBox;
   DisplayBox::Box *displayBox;
-  Physics::Motion motion;
-  Geometry::Point position;
+  Physics::MotionState motion;
 
   GameObject(const Geometry::Point &pos,
              BoundingBox::Box *bounding,
@@ -26,26 +25,33 @@ public:
   ~GameObject();
 
 public:
+  /**
+   * Render the GameObject
+   * @param time The time delta used for physics related function
+   * @param renderWireFrame If true, render the wireframe of the object
+   * @param renderMotion If true, render movement vector.
+   */
   void render(double time, bool renderWireFrame, bool renderMotion);
   bool checkCollision(GameObject *other);
   static void handleCollision(GameObject *a, GameObject *b);
-  static GameObject createRectangleObject(const Geometry::Point &pos,
+  static GameObject *createRectangleObject(const Geometry::Point &pos,
                                           double w,
                                           double h,
                                           double angle,
                                           double mass,
                                           const Color &color);
 
-  static GameObject createRoundObject(const Geometry::Point &pos,
+  static GameObject *createRoundObject(const Geometry::Point &pos,
                                       double mass,
                                       double radius,
                                       const Color &color);
-  static GameObject createImmovableRectangleObject(const Geometry::Point &pos,
-                                            double w,
-                                            double h,
-                                            double angle,
-                                            const Color &color);
-  static GameObject createRoundImmovableObject(const Geometry::Point &pos,
-                                        double radius,
-                                        const Color &color);
+  static GameObject *createImmovableRectangleObject(const Geometry::Point &pos,
+                                                   double w,
+                                                   double h,
+                                                   double angle,
+                                                   const Color &color);
+  static GameObject *createImmovableRoundObject(const Geometry::Point &pos,
+                                               double radius,
+                                               const Color &color);
+  Geometry::Point &position();
 };

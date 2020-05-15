@@ -11,7 +11,7 @@ GameObject::GameObject(const Geometry::Point &pos,
                        DisplayBox::Box *display,
                        double mass,
                        bool immovable)
-    : boundingBox(bounding), displayBox(display), motion(mass, immovable), position(pos) {}
+    : boundingBox(bounding), displayBox(display), motion(pos, mass, immovable) {}
 
 GameObject::~GameObject() {
   delete displayBox;
@@ -20,64 +20,69 @@ GameObject::~GameObject() {
 
 
 void GameObject::render(double time, bool renderWireFrame, bool renderMotion) {
-  position = motion.move(position, time);
-  displayBox->render(position);
+  motion.move(time);
+  displayBox->render(this->position());
   if (renderWireFrame) {
-    boundingBox->render(position);
+    boundingBox->render(this->position());
   }
   if (renderMotion) {
-    motion.render(position);
+    motion.render(this->position());
   }
 }
 
-GameObject GameObject::createRoundObject(const Geometry::Point &pos,
-                                         double mass,
-                                         double radius,
-                                         const Color &color) {
+GameObject *GameObject::createRoundObject(const Geometry::Point &pos,
+                                          double mass,
+                                          double radius,
+                                          const Color &color) {
   auto *bndBox = new BoundingBox::CircleBox(radius);
   auto *dspBox = new DisplayBox::CircleBox(radius, color);
-  return GameObject(pos, bndBox, dspBox, mass, false);
+  return new GameObject(pos, bndBox, dspBox, mass, false);
 }
 
-GameObject GameObject::createRoundImmovableObject(const Geometry::Point &pos,
-                                         double radius,
-                                         const Color &color) {
+GameObject *GameObject::createImmovableRoundObject(const Geometry::Point &pos,
+                                                   double radius,
+                                                   const Color &color) {
   auto *bndBox = new BoundingBox::CircleBox(radius);
   auto *dspBox = new DisplayBox::CircleBox(radius, color);
-  return GameObject(pos, bndBox, dspBox, 1e9, true);
+  return new GameObject(pos, bndBox, dspBox, 1e9, true);
 }
 
-GameObject GameObject::createRectangleObject(const Geometry::Point &pos,
-                                             double w,
-                                             double h,
-                                             double angle,
-                                             double mass,
-                                             const Color &color) {
+GameObject *GameObject::createRectangleObject(const Geometry::Point &pos,
+                                              double w,
+                                              double h,
+                                              double angle,
+                                              double mass,
+                                              const Color &color) {
   auto *bndBox = new BoundingBox::RectangleBox({0, 0}, w, h, angle);
   auto *dspBox = new DisplayBox::RectangleBox(w, h, angle, color);
-  return GameObject(pos, bndBox, dspBox, mass, false);
+  return new GameObject(pos, bndBox, dspBox, mass, false);
 }
 
-GameObject GameObject::createImmovableRectangleObject(const Geometry::Point &pos,
-                                                      double w,
-                                                      double h,
-                                                      double angle,
-                                                      const Color &color) {
+GameObject *GameObject::createImmovableRectangleObject(const Geometry::Point &pos,
+                                                       double w,
+                                                       double h,
+                                                       double angle,
+                                                       const Color &color) {
 
   Geometry::Point offset(0, 0);
   auto *bndBox = new BoundingBox::RectangleBox(offset, w, h, angle);
   auto *dspBox = new DisplayBox::RectangleBox(w, h, angle, color);
-  return GameObject(pos, bndBox, dspBox, 1e9, true);
+  return new GameObject(pos, bndBox, dspBox, 1e9, true);
 }
 
 bool GameObject::checkCollision(GameObject *other) {
-  return boundingBox->checkCollision(position, other->position, other->boundingBox);
+  bool res = boundingBox->checkCollision(this->position(), other->position(), other->boundingBox);
+  return res;
 }
 void GameObject::handleCollision(GameObject *a, GameObject *b) {
   Geometry::Vector normalVec =
-          a->boundingBox->normalCollisionVector(a->position, b->position, b->boundingBox);
-  Geometry::Vector newVelocityA = a->motion.calculateElasticCollision(b->motion, normalVec);
-  Geometry::Vector newVelocityB = b->motion.calculateElasticCollision(a->motion, -normalVec);
+          a->boundingBox->normalCollisionVector(a->position(), b->position(), b->boundingBox);
+  Geometry::Vector newVelocityA = a->motion.calculateCollision(b->motion, normalVec);
+  Geometry::Vector newVelocityB = b->motion.calculateCollision(a->motion, -normalVec);
   a->motion.setVelocity(newVelocityA);
   b->motion.setVelocity(newVelocityB);
+}
+
+Geometry::Point &GameObject::position() {
+  return motion.position;
 }

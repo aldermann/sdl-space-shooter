@@ -1,9 +1,11 @@
 # Define the project name
+set (CXX g++-9)
 project(sdl-ball CXX)
 
 # Set the cmake minimum version to 3.5.1
 cmake_minimum_required(VERSION 3.5.1)
 set(CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)

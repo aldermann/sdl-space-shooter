@@ -22,8 +22,8 @@ namespace BoundingBox {
     }
   }
 
-  Geometry::Vector Box::normalCollisionVector(Geometry::Point &pos,
-                                              Geometry::Point &otherPos,
+  Geometry::Vector Box::normalCollisionVector(const Geometry::Point &pos,
+                                              const Geometry::Point &otherPos,
                                               Box *otherBox) {
     switch (otherBox->getShape()) {
       case Rectangle:

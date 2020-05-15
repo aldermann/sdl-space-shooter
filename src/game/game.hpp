@@ -7,22 +7,22 @@
 
 #include <object/object.hpp>
 #include <unordered_map>
-class Game {
+class GameManager {
   std::unordered_map<int, GameObject*> objectList;
   bool debugMode;
 
 private:
-  explicit Game(bool debugMode);
+  explicit GameManager(bool debugMode);
   void render(double time);
   void checkCollision();
 
 public:
-  static Game* instance;
+  static GameManager* instance;
   int addObject(GameObject* object);
   void removeObject(int key);
   void loop();
-  static Game* getInstance();
-  static Game* createInstance(bool);
+  static GameManager* getInstance();
+  static GameManager* createInstance(bool);
   static void releaseInstance();
   static void waitIndefinitely();
 };
