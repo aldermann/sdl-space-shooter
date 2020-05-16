@@ -2,10 +2,10 @@
 // Created by Trần Công Việt An on 6/5/20.
 //
 #include <iostream>
-#include <number/number.hpp>
-#include <utils/utils.hpp>
 
 #include "bounding_box.hpp"
+#include "utils/number/number.hpp"
+#include "utils/utils.hpp"
 
 namespace BoundingBox {
   RectangleBox::RectangleBox(const Geometry::Point &offset,
@@ -74,6 +74,4 @@ namespace BoundingBox {
   }
 
   RectangleBox::~RectangleBox() = default;
-
-
 }// namespace BoundingBox

@@ -3,11 +3,10 @@
 //
 
 #include <iostream>
-#include <number/number.hpp>
-#include <utils/error/error.hpp>
-#include <utils/utils.hpp>
-
 #include "geometry.hpp"
+#include "utils/error/error.hpp"
+#include "utils/number/number.hpp"
+#include "utils/utils.hpp"
 
 namespace Geometry {
   // Segment

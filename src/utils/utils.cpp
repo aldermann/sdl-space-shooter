@@ -5,7 +5,10 @@
 // Created by Trần Công Việt An on 1/5/20.
 //
 
+#include <iostream>
+
 #include "SDL.h"
+
 void disable_compositor() {
 #if defined linux && SDL_VERSION_ATLEAST(2, 0, 8)
   // Disable compositor bypass

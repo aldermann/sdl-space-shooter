@@ -10,17 +10,18 @@ GameObject::GameObject(const Geometry::Point &pos,
                        BoundingBox::Box *bounding,
                        DisplayBox::Box *display,
                        double mass,
-                       bool immovable)
-    : boundingBox(bounding), displayBox(display), motion(pos, mass, immovable) {}
+                       bool immovable,
+                       double elastic)
+    : boundingBox(bounding), displayBox(display), motion(pos, mass, immovable),
+      elasticity(std::max(0.0, std::min(elastic, 1.0))) {}
 
 GameObject::~GameObject() {
   delete displayBox;
   delete boundingBox;
 }
 
-
 void GameObject::render(double time, bool renderWireFrame, bool renderMotion) {
-  motion.move(time);
+  setMotionState(motion.nextState(time));
   displayBox->render(this->position());
   if (renderWireFrame) {
     boundingBox->render(this->position());
@@ -30,59 +31,33 @@ void GameObject::render(double time, bool renderWireFrame, bool renderMotion) {
   }
 }
 
-GameObject *GameObject::createRoundObject(const Geometry::Point &pos,
-                                          double mass,
-                                          double radius,
-                                          const Color &color) {
-  auto *bndBox = new BoundingBox::CircleBox(radius);
-  auto *dspBox = new DisplayBox::CircleBox(radius, color);
-  return new GameObject(pos, bndBox, dspBox, mass, false);
-}
-
-GameObject *GameObject::createImmovableRoundObject(const Geometry::Point &pos,
-                                                   double radius,
-                                                   const Color &color) {
-  auto *bndBox = new BoundingBox::CircleBox(radius);
-  auto *dspBox = new DisplayBox::CircleBox(radius, color);
-  return new GameObject(pos, bndBox, dspBox, 1e9, true);
-}
-
-GameObject *GameObject::createRectangleObject(const Geometry::Point &pos,
-                                              double w,
-                                              double h,
-                                              double angle,
-                                              double mass,
-                                              const Color &color) {
-  auto *bndBox = new BoundingBox::RectangleBox({0, 0}, w, h, angle);
-  auto *dspBox = new DisplayBox::RectangleBox(w, h, angle, color);
-  return new GameObject(pos, bndBox, dspBox, mass, false);
-}
-
-GameObject *GameObject::createImmovableRectangleObject(const Geometry::Point &pos,
-                                                       double w,
-                                                       double h,
-                                                       double angle,
-                                                       const Color &color) {
-
-  Geometry::Point offset(0, 0);
-  auto *bndBox = new BoundingBox::RectangleBox(offset, w, h, angle);
-  auto *dspBox = new DisplayBox::RectangleBox(w, h, angle, color);
-  return new GameObject(pos, bndBox, dspBox, 1e9, true);
-}
-
 bool GameObject::checkCollision(GameObject *other) {
   bool res = boundingBox->checkCollision(this->position(), other->position(), other->boundingBox);
   return res;
 }
-void GameObject::handleCollision(GameObject *a, GameObject *b) {
+
+void GameObject::handleBounce(GameObject *a, GameObject *b, double time) {
+  auto collisionChecker = [a, b](Physics::MotionState aState, Physics::MotionState bState) {
+    return a->boundingBox->checkCollision(aState.position, bState.position, b->boundingBox);
+  };
+  auto motions =
+          Physics::exactCollisionPosition(a->lastMotion, b->lastMotion, time, collisionChecker);
+  Physics::MotionState &aMotion = motions.first, &bMotion = motions.second;
   Geometry::Vector normalVec =
-          a->boundingBox->normalCollisionVector(a->position(), b->position(), b->boundingBox);
-  Geometry::Vector newVelocityA = a->motion.calculateCollision(b->motion, normalVec);
-  Geometry::Vector newVelocityB = b->motion.calculateCollision(a->motion, -normalVec);
-  a->motion.setVelocity(newVelocityA);
-  b->motion.setVelocity(newVelocityB);
+          a->boundingBox->normalCollisionVector(aMotion.position, bMotion.position, b->boundingBox);
+  Geometry::Vector newVelocityA = aMotion.velocityAfterCollision(bMotion, normalVec);
+  Geometry::Vector newVelocityB = bMotion.velocityAfterCollision(aMotion, -normalVec);
+  aMotion.setVelocity(newVelocityA * a->elasticity);
+  bMotion.setVelocity(newVelocityB * b->elasticity);
+  a->setMotionState(aMotion);
+  b->setMotionState(bMotion);
 }
 
 Geometry::Point &GameObject::position() {
   return motion.position;
+}
+
+void GameObject::setMotionState(const Physics::MotionState &m) {
+  lastMotion = motion;
+  motion = m;
 }

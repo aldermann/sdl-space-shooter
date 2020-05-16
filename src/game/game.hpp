@@ -5,8 +5,9 @@
 #pragma once
 
 
-#include <object/object.hpp>
 #include <unordered_map>
+
+#include "object/object.hpp"
 class GameManager {
   std::unordered_map<int, GameObject*> objectList;
   bool debugMode;
@@ -14,7 +15,7 @@ class GameManager {
 private:
   explicit GameManager(bool debugMode);
   void render(double time);
-  void checkCollision();
+  void manageCollision(double time);
 
 public:
   static GameManager* instance;

@@ -4,6 +4,7 @@
 #pragma once
 
 #include <vector>
+
 namespace Number {
   class FloatInterval {
   public:

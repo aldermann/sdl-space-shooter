@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <geometry/geometry.hpp>
-#include <render/color.hpp>
-#include <render/renderer.hpp>
+#include"geometry/geometry.hpp"
+#include"render/color.hpp"
+#include"render/renderer.hpp"
 
 namespace DisplayBox {
   class Box {

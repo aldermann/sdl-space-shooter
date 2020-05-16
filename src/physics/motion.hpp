@@ -3,8 +3,6 @@
 //
 
 #pragma once
-
-
 #include "geometry/geometry.hpp"
 namespace Physics {
   class MotionState {
@@ -14,17 +12,22 @@ namespace Physics {
 
     Geometry::Point position;
     Geometry::Vector velocity, acceleration;
-    double mass;
+    double mass, g, drag;
     bool immovable;
 
-    void move(double t);
+    MotionState nextState(double t) const;
     void setVelocity(const Geometry::Vector &v);
     void setGravity(double g);
-    Geometry::Vector calculateCollision(MotionState &other,
-                                               const Geometry::Vector &normalVec) const;
+    Geometry::Vector velocityAfterCollision(MotionState &other,
+                                            const Geometry::Vector &normalVec) const;
     void render(const Geometry::Point &p) const;
     void setDrag(const float &coefficient);
-  };
 
+    typedef std::function<bool(MotionState &x, MotionState &y)> collisionPredicate;
+  };
+  std::pair<MotionState, MotionState> exactCollisionPosition(MotionState &a,
+                                                              MotionState &b,
+                                                              double time,
+                                                              const MotionState::collisionPredicate& f);
 
 }// namespace Physics

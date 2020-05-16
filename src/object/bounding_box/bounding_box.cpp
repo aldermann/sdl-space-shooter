@@ -5,7 +5,8 @@
 #include "bounding_box.hpp"
 
 #include <iostream>
-#include <render/renderer.hpp>
+
+#include "render/renderer.hpp"
 
 namespace BoundingBox {
   // Box
@@ -20,6 +21,7 @@ namespace BoundingBox {
       case Circle:
         return checkCollisionCirc(position, otherPosition, (CircleBox *) otherBox);
     }
+    return false;
   }
 
   Geometry::Vector Box::normalCollisionVector(const Geometry::Point &pos,
@@ -31,5 +33,6 @@ namespace BoundingBox {
       case Circle:
         return normalCollisionVectorCirc(pos, otherPos, (CircleBox *) otherBox);
     }
+    return {};
   }
 }// namespace BoundingBox

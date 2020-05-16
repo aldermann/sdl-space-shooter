@@ -5,6 +5,7 @@
 #pragma once
 #include <cmath>
 #include <ostream>
+#include <vector>
 
 namespace Geometry {
   class Segment;

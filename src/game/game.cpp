@@ -5,8 +5,9 @@
 #include "game.hpp"
 
 #include <iostream>
-#include <utils/error/error.hpp>
-#include <utils/timer.hpp>
+
+#include "utils/error/error.hpp"
+#include "utils/timer.hpp"
 GameManager::GameManager(bool debugMode) : objectList(), debugMode(debugMode) {
   /// Game manager:
   /// The game manager is a singleton (only one instance can exist)
@@ -70,14 +71,15 @@ void GameManager::render(double time) {
   }
 }
 
-void GameManager::checkCollision() {
+void GameManager::manageCollision(double time) {
   for (std::pair<int, GameObject *> it : objectList) {
     for (std::pair<int, GameObject *> it2 : objectList) {
-      if (it2.first < it.first) {
-        GameObject *ob1 = it.second, *ob2 = it2.second;
-        if (ob1->checkCollision(ob2)) {
-          GameObject::handleCollision(ob1, ob2);
-        }
+      if (it2.first == it.first) {
+        break;
+      }
+      GameObject *ob1 = it.second, *ob2 = it2.second;
+      if (ob1->checkCollision(ob2)) {
+        GameObject::handleBounce(ob1, ob2, time);
       }
     }
   }
@@ -112,7 +114,7 @@ void GameManager::loop() {
       timer.tick();
       renderer->clearScreen(Palette::get()->White);
       render(last_frame_duration);
-      checkCollision();
+      manageCollision(last_frame_duration);
       renderer->present();
       last_frame_duration = timer.elapsedSecondsHRSinceTick();
       ++frame;

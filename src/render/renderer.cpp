@@ -6,12 +6,12 @@
 
 #include <chrono>
 #include <iostream>
-#include <number/number.hpp>
-#include <utils/timer.hpp>
-#include <utils/utils.hpp>
 
 #include "SDL2_gfxPrimitives.h"
 #include "utils/error/sdl_error.hpp"
+#include "utils/number/number.hpp"
+#include "utils/timer.hpp"
+#include "utils/utils.hpp"
 
 Renderer::Renderer(SDL_Renderer *renderer) : sdlRenderer(renderer) {}
 Renderer::~Renderer() {
@@ -26,12 +26,13 @@ Renderer *Renderer::createInstance() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
       throw FatalSDLError();
     }
-    Renderer::window = SDL_CreateWindow("Ball emulator",
-                                        SDL_WINDOWPOS_CENTERED,
-                                        SDL_WINDOWPOS_CENTERED,
-                                        1200,
-                                        780,
-                                        SDL_WINDOW_SHOWN);
+    Renderer::window =
+            SDL_CreateWindow("Ball emulator",
+                             SDL_WINDOWPOS_CENTERED,
+                             SDL_WINDOWPOS_CENTERED,
+                             1200,
+                             780,
+                             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
     disable_compositor();
     if (Renderer::window == nullptr) {
       throw FatalSDLError();
