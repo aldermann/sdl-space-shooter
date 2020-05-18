@@ -21,4 +21,4 @@ namespace Physics {
     static World* init(double g);
     static Geometry::Vector getGravity();
   };
-};// namespace Physics
+}// namespace Physics

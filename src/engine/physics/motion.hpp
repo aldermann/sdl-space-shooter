@@ -5,6 +5,7 @@
 #pragma once
 
 #include "engine/geometry/geometry.hpp"
+#include <functional>
 
 namespace Physics {
   class MotionState {

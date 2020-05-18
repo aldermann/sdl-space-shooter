@@ -92,4 +92,4 @@ namespace BoundingBox {
                                                const Geometry::Point &otherPos,
                                                RectangleBox *other) override;
   };
-};// namespace BoundingBox
+}// namespace BoundingBox
