@@ -4,11 +4,11 @@
 
 #include "dynamic.hpp"
 
-#include <engine/render/renderer.hpp>
 #include <iostream>
-#include <utils/number.hpp>
 
+#include "engine/render/renderer.hpp"
 #include "physics.hpp"
+#include "utils/number.hpp"
 
 namespace Physics {
   Dynamic::Dynamic() : Dynamic(Geometry::Point(), 0, 0) {}
@@ -76,6 +76,7 @@ namespace Physics {
                                      Dynamic &bDyn,
                                      BoundingBox::Box *aBox,
                                      BoundingBox::Box *bBox,
+                                     const Geometry::Vector &normalVec,
                                      double time) {
     auto checker = [aBox, bBox](Physics::MotionState &aState, Physics::MotionState &bState) {
       return aBox->checkCollision(aState.position, bState.position, bBox);
@@ -83,8 +84,7 @@ namespace Physics {
     auto states = exactCollisionState(aDyn.motion, bDyn.motion, time, checker);
     aDyn.motion = states.first;
     bDyn.motion = states.second;
-    Geometry::Vector normalVec =
-            aBox->normalCollisionVector(aDyn.position(), bDyn.position(), bBox);
+
     Geometry::Vector newVelocityA = aDyn.velocityAfterCollision(bDyn, normalVec) * aDyn.elasticity;
     Geometry::Vector newVelocityB = bDyn.velocityAfterCollision(aDyn, -normalVec) * bDyn.elasticity;
     if (aDyn.movable) {

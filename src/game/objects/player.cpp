@@ -4,12 +4,17 @@
 
 #include "player.hpp"
 
+#include <engine/manager/game.hpp>
 #include <iostream>
+
+#include "bullet.hpp"
+#include "const.hpp"
+
 
 Player::Player(const Geometry::Point& position, double speed) : size(30), speed(speed) {
   boundingBox = new BoundingBox::CircleBox(size);
-  type = "player";
-  dynamic = {position, 5, 0.5};
+  type = PLAYER;
+  dynamic = {position, 20, 0.5};
 }
 
 void Player::render(const Geometry::Point& position) {
@@ -27,8 +32,12 @@ void Player::onKeyDown(SDL_Keycode key) {
     case SDLK_d:
       dynamic.setHorizontalVelocity(speed);
       return;
+    case SDLK_j:
+      shoot();
+      return;
     case SDLK_w:
     case SDLK_UP:
+    case SDLK_SPACE:
       jump();
       return;
     default:
@@ -49,9 +58,16 @@ void Player::onKeyUp(SDL_Keycode key) {
   }
 }
 
+void Player::shoot() {
+  auto bullet = new Bullet(position() + Geometry::Vector(size + 10, 0), {1000, 0});
+  GameManager::registerObject(bullet);
+}
+
 void Player::onCollide(GameObject* otherObject) {
-  if (otherObject->type == "floor") {
-    onAir = false;
+  switch (otherObject->type) {
+    case FLOOR:
+      onAir = false;
+      break;
   }
 }
 

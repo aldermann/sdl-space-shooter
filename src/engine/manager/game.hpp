@@ -5,24 +5,27 @@
 #pragma once
 
 
-#include <unordered_map>
+#include <unordered_set>
 
 #include "engine/object/object.hpp"
 class GameManager {
-  std::unordered_map<int, GameObject*> objectList;
+  std::unordered_set<GameObject*> objectList;
+  std::vector<GameObject*> insertList, deleteList;
   bool debugMode;
   friend class GameObject;
+  bool quit = false;
 
-private:
   explicit GameManager(bool debugMode);
-  void runRender(double time);
+  void handleRender();
   void handleCollision(double time);
+  void applyObjectListModification();
 
 public:
   static GameManager* instance;
-  int addObject(GameObject* object);
-  GameObject* removeObject(int key);
-  GameObject* getObject(int key);
+  void _registerObject(GameObject* object);
+  static void registerObject(GameObject* object);
+  void _deleteObject(GameObject* ptr);
+  static void deleteObject(GameObject* object);
   void loop();
   static GameManager* getInstance();
   static GameManager* createInstance(bool);
@@ -30,4 +33,6 @@ public:
   static void waitIndefinitely();
   void handleKeyDown(SDL_Keycode key);
   void handleKeyUp(SDL_Keycode key);
+  void handleDynamic(double time);
+  void handleEvent();
 };

@@ -21,24 +21,25 @@ Renderer::~Renderer() {
 Renderer *Renderer::instance = nullptr;
 SDL_Window *Renderer::window = nullptr;
 
-Renderer *Renderer::createInstance() {
+Renderer *Renderer::createInstance(const std::string &title, int width, int height) {
   if (Renderer::instance == nullptr) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
       throw FatalSDLError();
     }
-    Renderer::window = SDL_CreateWindow("Ball emulator",
+    Renderer::window = SDL_CreateWindow(title.c_str(),
                                         SDL_WINDOWPOS_CENTERED,
                                         SDL_WINDOWPOS_CENTERED,
-                                        1200,
-                                        780,
+                                        width,
+                                        height,
                                         SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     disable_compositor();
     if (Renderer::window == nullptr) {
       throw FatalSDLError();
     }
-    SDL_Renderer *render = SDL_CreateRenderer(Renderer::window,
-                                              -1,
-                                              SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Renderer *render =
+            SDL_CreateRenderer(Renderer::window,
+                               -1,
+                               SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (render == nullptr) {
       throw FatalSDLError();
     }
@@ -76,14 +77,27 @@ void Renderer::present() {
 }
 
 void Renderer::drawCircle(const Geometry::Circle &c, Color col) {
-  if (filledCircleRGBA(sdlRenderer, c.center.x, c.center.y, c.radius, col.r, col.g, col.b, col.a) <
-      0) {
+  if (filledCircleRGBA(sdlRenderer,
+                       c.center.x,
+                       c.center.y,
+                       c.radius,
+                       col.r,
+                       col.g,
+                       col.b,
+                       col.a) < 0) {
     throw WarningSDLError();
   }
 }
 
 void Renderer::drawCircleBorder(const Geometry::Circle &c, Color col) {
-  if (circleRGBA(sdlRenderer, c.center.x, c.center.y, c.radius, col.r, col.g, col.b, col.a) < 0) {
+  if (circleRGBA(sdlRenderer,
+                 c.center.x,
+                 c.center.y,
+                 c.radius,
+                 col.r,
+                 col.g,
+                 col.b,
+                 col.a) < 0) {
     throw WarningSDLError();
   }
 }
@@ -95,7 +109,8 @@ void Renderer::drawRectangle(const Geometry::Rectangle &r, Color col) {
     cornerX[i] = (int) corners[i].x;
     cornerY[i] = (int) corners[i].y;
   }
-  if (filledPolygonRGBA(sdlRenderer, cornerX, cornerY, 4, col.r, col.g, col.b, col.a) < 0) {
+  if (filledPolygonRGBA(sdlRenderer, cornerX, cornerY, 4, col.r, col.g, col.b, col.a) <
+      0) {
     throw WarningSDLError();
   }
 }
@@ -114,12 +129,23 @@ void Renderer::drawRectangleBorder(const Geometry::Rectangle &r, Color col) {
 
 void Renderer::drawSegment(const Geometry::Segment &s, double thickness, Color col) {
   const Geometry::Point &a = s.a, &b = s.b;
-  if (thickLineRGBA(sdlRenderer, a.x, a.y, b.x, b.y, thickness, col.r, col.g, col.b, col.a) < 0) {
+  if (thickLineRGBA(sdlRenderer,
+                    a.x,
+                    a.y,
+                    b.x,
+                    b.y,
+                    thickness,
+                    col.r,
+                    col.g,
+                    col.b,
+                    col.a) < 0) {
     throw WarningSDLError();
   }
 }
 
-void Renderer::drawVector(const Geometry::Point &position, const Geometry::Vector &v, Color col) {
+void Renderer::drawVector(const Geometry::Point &position,
+                          const Geometry::Vector &v,
+                          Color col) {
   Geometry::Point endPoint = position + v;
   drawSegment({position, endPoint}, 5, col);
 }

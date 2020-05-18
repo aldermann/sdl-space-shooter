@@ -12,6 +12,13 @@ GameObject::GameObject() : boundingBox(nullptr), solid(true) {}
 GameObject::GameObject(BoundingBox::Box *bounding, Physics::Dynamic dynamic, bool solid)
     : boundingBox(bounding), dynamic(std::move(dynamic)), solid(solid) {}
 
+GameObject::GameObject(BoundingBox::Box *bounding,
+                       const Geometry::Point &position,
+                       double mass,
+                       double elasticity,
+                       bool solid)
+    : boundingBox(bounding), dynamic(position, mass, elasticity), solid(solid) {}
+
 GameObject::GameObject(BoundingBox::Box *bounding, const Physics::Dynamic &dynamic)
     : GameObject(bounding, dynamic, true) {}
 
@@ -19,8 +26,7 @@ GameObject::~GameObject() {
   delete boundingBox;
 }
 
-void GameObject::innerRender(double time) {
-  dynamic.advance(time);
+void GameObject::innerRender() {
   render(position());
   bool debugMode = GameManager::getInstance()->debugMode;
   if (debugMode) {
@@ -35,16 +41,19 @@ const Geometry::Point &GameObject::position() const {
   return dynamic.position();
 }
 
-bool GameObject::checkCollision(GameObject *other) const {
-  bool res = boundingBox->checkCollision(position(), other->position(), other->boundingBox);
-  return res;
-}
-
 void GameObject::handleCollision(GameObject *objectA, GameObject *objectB, double time) {
+
   Physics::Dynamic &aDyn = objectA->dynamic, &bDyn = objectB->dynamic;
   BoundingBox::Box *aBox = objectA->boundingBox, *bBox = objectB->boundingBox;
+  if (!aBox->checkCollision(aDyn.position(), bDyn.position(), bBox)) {
+    return;
+  }
+  Geometry::Vector normalVec =
+          aBox->normalCollisionVector(aDyn.position(), bDyn.position(), bBox);
+  objectA->onCollide(objectB);
+  objectB->onCollide(objectA);
   if (objectA->solid and objectB->solid) {
-    Physics::Dynamic::handleSolidCollision(aDyn, bDyn, aBox, bBox, time);
+    Physics::Dynamic::handleSolidCollision(aDyn, bDyn, aBox, bBox, normalVec, time);
   }
 }
 
@@ -52,3 +61,10 @@ void GameObject::onKeyDown(SDL_Keycode) {}
 void GameObject::onKeyUp(SDL_Keycode key) {}
 void GameObject::onCollide(GameObject *otherObject) {}
 void GameObject::render(const Geometry::Point &position) {}
+void GameObject::destroy() {
+  /**
+   * Call this method to destroy the object.
+   * DON'T touch the object after calling destroy, or you will get fucked.
+   */
+  GameManager::deleteObject(this);
+}

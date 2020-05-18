@@ -11,6 +11,11 @@ namespace Physics {
   public:
     MotionState();
     explicit MotionState(const Geometry::Point &position);
+    MotionState(const Geometry::Point &position,
+                const Geometry::Vector &velocity);
+    MotionState(const Geometry::Point &position,
+                const Geometry::Vector &velocity,
+                const Geometry::Vector &acceleration);
     Geometry::Point position;
     Geometry::Vector velocity, acceleration;
 

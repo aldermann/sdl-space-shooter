@@ -12,7 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 # Add SDL2 CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 include_directories(${PROJECT_SOURCE_DIR}/src)
-set(SOURCE_FILES src/main.cpp
+set(SOURCE_FILES src/game/main.cpp
         src/engine/manager/game.hpp
         src/engine/geometry/geometry.hpp
         src/engine/object/object.hpp
@@ -33,7 +33,7 @@ set(SOURCE_FILES src/main.cpp
         src/engine/physics/dynamic.cpp src/engine/physics/motion.cpp
         src/engine/physics/physics.cpp
         src/game/objects/player.cpp
-        src/game/objects/wall.cpp src/game/objects/wall.hpp)
+        src/game/objects/wall.cpp src/game/objects/wall.hpp src/game/objects/enemy.cpp src/game/objects/enemy.hpp src/game/objects/bullet.cpp src/game/objects/bullet.hpp src/game/objects/const.hpp)
 set(BINARY_NAME ${PROJECT_NAME})
 add_executable(${BINARY_NAME} ${SOURCE_FILES})
 set_target_properties(${BINARY_NAME} PROPERTIES LINKER_LANGUAGE CXX)

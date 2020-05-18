@@ -4,10 +4,12 @@
 
 #include "wall.hpp"
 
+#include "const.hpp"
+
 Wall::Wall(const Geometry::Point& position, double width, double height, double angle)
     : rect(position, width, height, angle) {
   boundingBox = new BoundingBox::RectangleBox(width, height, angle);
-  type = "wall";
+  type = WALL;
   dynamic = {position, false};
 }
 
@@ -17,5 +19,5 @@ void Wall::render(const Geometry::Point& position) {
 
 Floor::Floor(const Geometry::Point& position, double width, double height, double angle)
     : Wall(position, width, height, angle) {
-  type = "floor";
+  type = FLOOR;
 }

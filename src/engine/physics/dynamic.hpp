@@ -39,6 +39,7 @@ namespace Physics {
                                      Dynamic &bDyn,
                                      BoundingBox::Box *aBox,
                                      BoundingBox::Box *bBox,
+                                     const Geometry::Vector &normalVec,
                                      double time);
 
   private:

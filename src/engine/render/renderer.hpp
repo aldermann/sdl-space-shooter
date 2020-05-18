@@ -19,7 +19,7 @@ private:
   ~Renderer();
 
 public:
-  static Renderer *createInstance();
+  static Renderer *createInstance(const std::string& title, int width, int height);
   static Renderer *getInstance();
   static void releaseInstance();
   void clearScreen(Color c);

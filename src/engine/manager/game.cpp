@@ -24,9 +24,7 @@ GameManager *GameManager::createInstance(bool debugMode) {
   if (GameManager::instance == nullptr) {
     GameManager::instance = new GameManager(debugMode);
   }
-  Renderer::createInstance();
   Palette::init();
-  Physics::World::init(150);
   return GameManager::instance;
 }
 
@@ -53,62 +51,86 @@ void GameManager::releaseInstance() {
   delete GameManager::instance;
 }
 
-int GameManager::addObject(GameObject *object) {
+void GameManager::_registerObject(GameObject *object) {
   /**
    * Add a new object into the game
    * Will throw a FatalAppError if the manager instance hasn't been initialized yet
    */
-  int key = (int) random();
-  objectList.insert(std::make_pair(key, object));
-  return key;
-}
-GameObject *GameManager::getObject(const int key) {
-  auto item = objectList.find(key);
-  if (item == objectList.end()) {
-    throw WarningAppError("No such item with key");
-  }
-  return item->second;
-}
-GameObject *GameManager::removeObject(const int key) {
-  auto item = objectList.find(key);
-  if (item == objectList.end()) {
-    throw WarningAppError("No such item with key");
-  }
-  objectList.erase(key);
-  return item->second;
+  insertList.push_back(object);
 }
 
-void GameManager::runRender(double time) {
-  for (std::pair<int, GameObject *> it : objectList) {
-    it.second->innerRender(time);
+void GameManager::_deleteObject(GameObject *ptr) {
+  auto item = objectList.find(ptr);
+  if (item == objectList.end()) {
+    throw WarningAppError("No such item");
+  }
+  deleteList.push_back(ptr);
+}
+
+void GameManager::applyObjectListModification() {
+  for (GameObject *ptr : insertList) {
+    objectList.insert(ptr);
+  }
+  insertList.clear();
+  for (GameObject *ptr : deleteList) {
+    objectList.erase(ptr);
+    delete ptr;
+  }
+  deleteList.clear();
+}
+
+void GameManager::handleRender() {
+  Renderer *renderer = Renderer::getInstance();
+  renderer->clearScreen(Palette::get()->White);
+  for (GameObject *it : objectList) {
+    it->innerRender();
+  }
+  renderer->present();
+}
+
+void GameManager::handleDynamic(double time) {
+  for (GameObject *it : objectList) {
+    it->dynamic.advance(time);
   }
 }
 
 void GameManager::handleCollision(double time) {
-  for (std::pair<int, GameObject *> it : objectList) {
-    for (std::pair<int, GameObject *> it2 : objectList) {
-      if (it2.first == it.first) {
+  for (GameObject *ob1 : objectList) {
+    for (GameObject *ob2 : objectList) {
+      if (ob2 == ob1) {
         break;
       }
-      GameObject *ob1 = it.second, *ob2 = it2.second;
-      if (ob1->checkCollision(ob2)) {
-        ob1->onCollide(ob2);
-        ob2->onCollide(ob1);
-        GameObject::handleCollision(ob1, ob2, time);
-      }
+      GameObject::handleCollision(ob1, ob2, time);
+    }
+  }
+}
+
+void GameManager::handleEvent() {
+  SDL_Event e;
+  while (SDL_PollEvent(&e) != 0) {
+    switch (e.type) {
+      case SDL_QUIT:
+        quit = true;
+        break;
+      case SDL_KEYDOWN:
+        handleKeyDown(e.key.keysym.sym);
+        break;
+      case SDL_KEYUP:
+        handleKeyUp(e.key.keysym.sym);
+        break;
     }
   }
 }
 
 void GameManager::handleKeyDown(SDL_Keycode key) {
-  for (std::pair<int, GameObject *> it : objectList) {
-    it.second->onKeyDown(key);
+  for (GameObject *ob : objectList) {
+    ob->onKeyDown(key);
   }
 }
 
 void GameManager::handleKeyUp(SDL_Keycode key) {
-  for (std::pair<int, GameObject *> it : objectList) {
-    it.second->onKeyUp(key);
+  for (GameObject *ob : objectList) {
+    ob->onKeyUp(key);
   }
 }
 void GameManager::waitIndefinitely() {
@@ -123,32 +145,17 @@ void GameManager::waitIndefinitely() {
 
 void GameManager::loop() {
   Timer timer;
-  bool quit = false;
   timer.start();
   long long frame = 0;
   double last_frame_duration = 0.1;
-  Renderer *renderer = Renderer::getInstance();
   while (!quit) {
     try {
-      SDL_Event e;
-      while (SDL_PollEvent(&e) != 0) {
-        switch (e.type) {
-          case SDL_QUIT:
-            quit = true;
-            break;
-          case SDL_KEYDOWN:
-            handleKeyDown(e.key.keysym.sym);
-            break;
-          case SDL_KEYUP:
-            handleKeyUp(e.key.keysym.sym);
-            break;
-        }
-      }
       timer.tick();
-      renderer->clearScreen(Palette::get()->White);
-      runRender(last_frame_duration);
+      handleEvent();
+      handleDynamic(last_frame_duration);
       handleCollision(last_frame_duration);
-      renderer->present();
+      handleRender();
+      applyObjectListModification();
       last_frame_duration = timer.elapsedSecondsHRSinceTick();
       ++frame;
     } catch (AppError &error) {
@@ -158,4 +165,10 @@ void GameManager::loop() {
       }
     }
   }
+}
+void GameManager::registerObject(GameObject *object) {
+  instance->_registerObject(object);
+}
+void GameManager::deleteObject(GameObject *object) {
+  instance->_deleteObject(object);
 }

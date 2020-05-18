@@ -7,6 +7,7 @@
 
 #include <engine/object/object.hpp>
 
+
 class Player : public GameObject {
 private:
   double size, speed;
@@ -19,4 +20,5 @@ public:
   void onKeyDown(SDL_Keycode key) override;
   void onKeyUp(SDL_Keycode key) override;
   void onCollide(GameObject* otherObject) override;
+  void shoot();
 };
