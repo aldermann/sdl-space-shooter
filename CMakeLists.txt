@@ -1,11 +1,11 @@
 # Define the project name
-set (CXX g++-9)
+set(CXX g++-9)
 project(sdl-ball CXX)
 
 # Set the cmake minimum version to 3.5.1
 cmake_minimum_required(VERSION 3.5.1)
 set(CMAKE_CXX_STANDARD 17)
-set (CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
+set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
@@ -13,29 +13,27 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 set(SOURCE_FILES src/main.cpp
-        src/game/game.cpp
-        src/geometry/geometry.cpp src/geometry/point.cpp src/geometry/point.cpp src/geometry/shape.cpp src/geometry/vector.cpp
-        src/utils/number/number.cpp
-        src/object/object.cpp
-        src/object/bounding_box/bounding_box.cpp src/object/bounding_box/circle_box.cpp src/object/bounding_box/rectangle_box.cpp
-        src/object/display_box/display_box.cpp
-        src/physics/motion.cpp
-        src/render/renderer.cpp
-        src/render/color.cpp
-        src/utils/timer.cpp
-        src/utils/error/error.cpp src/utils/error/sdl_error.cpp
-        src/game/game.hpp
-        src/geometry/geometry.hpp
-        src/utils/number/number.hpp
-        src/object/object.hpp
-        src/object/bounding_box/bounding_box.hpp
-        src/object/display_box/display_box.hpp
-        src/physics/motion.hpp
-        src/render/renderer.hpp
-        src/render/color.hpp
-        src/utils/timer.hpp
-        src/utils/error/error.hpp src/utils/error/sdl_error.hpp
-        src/utils/utils.cpp src/utils/utils.hpp src/object/object_factory.cpp)
+        src/engine/manager/game.hpp
+        src/engine/geometry/geometry.hpp
+        src/engine/object/object.hpp
+        src/engine/object/bounding_box/bounding_box.hpp
+        src/engine/render/renderer.hpp
+        src/engine/render/color.hpp
+        src/utils/number.hpp src/utils/timer.hpp src/utils/error/error.hpp src/utils/error/sdl_error.hpp src/utils/utils.hpp
+        src/engine/physics/dynamic.hpp src/engine/physics/motion.hpp
+        src/engine/physics/physics.hpp
+        src/game/objects/player.hpp
+
+        src/engine/manager/game.cpp
+        src/engine/geometry/point.cpp src/engine/geometry/point.cpp src/engine/geometry/shape.cpp src/engine/geometry/vector.cpp
+        src/engine/object/object.cpp
+        src/engine/object/bounding_box/bounding_box.cpp src/engine/object/bounding_box/circle_box.cpp src/engine/object/bounding_box/rectangle_box.cpp
+        src/engine/render/renderer.cpp src/engine/render/color.cpp
+        src/utils/number.cpp src/utils/timer.cpp src/utils/error/error.cpp src/utils/error/sdl_error.cpp src/utils/utils.cpp
+        src/engine/physics/dynamic.cpp src/engine/physics/motion.cpp
+        src/engine/physics/physics.cpp
+        src/game/objects/player.cpp
+        src/game/objects/wall.cpp src/game/objects/wall.hpp)
 set(BINARY_NAME ${PROJECT_NAME})
 add_executable(${BINARY_NAME} ${SOURCE_FILES})
 set_target_properties(${BINARY_NAME} PROPERTIES LINKER_LANGUAGE CXX)
