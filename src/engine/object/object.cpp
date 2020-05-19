@@ -58,6 +58,7 @@ void GameObject::handleCollision(GameObject *objectA, GameObject *objectB, doubl
 
 void GameObject::onKeyDown(SDL_Keycode) {}
 void GameObject::onKeyUp(SDL_Keycode key) {}
+void GameObject::mouseDown(int posx, int posy) {}
 void GameObject::onCollide(GameObject *otherObject) {}
 void GameObject::render() {}
 void GameObject::destroy() {

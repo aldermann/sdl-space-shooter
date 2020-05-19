@@ -22,6 +22,7 @@ public:
   void render() override;
   void onKeyDown(SDL_Keycode key) override;
   void onKeyUp(SDL_Keycode key) override;
+  void mouseDown(int posMouseX, int posMouseY) override;
   void onCollide(GameObject* otherObject) override;
-  void shoot();
+  void shoot(double velx, double vely);
 };

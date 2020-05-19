@@ -9,7 +9,7 @@
 
 #include "bullet.hpp"
 #include "const.hpp"
-
+#include<math.h>
 
 Player::Player(const Geometry::Point& position, double speed)
     : size(30), speed(speed), texture("assets/ball.png", 2 * size, 2 * size) {
@@ -68,6 +68,29 @@ void Player::shoot() {
     auto bullet = new PlayerBullet(position() + Geometry::Vector(size + 10, 0), {1000, 0});
     GameManager::registerObject(bullet);
   }
+void Player::mouseDown(int posMouseX, int posMouseY)
+{
+  shoot(posMouseX-position().x, posMouseY-position().y);
+}
+void Player::shoot(double vecx, double vecy)
+{
+  double leng = sqrt(vecx*vecx+vecy*vecy);
+  vecx/=leng;
+  vecy/=leng;
+  vecx*=vel;
+  vecy*=vel;
+  if(vecx>0)
+  {
+    auto bullet = new Bullet(position() + Geometry::Vector(size + 10, 10), {vecx, vecy});
+    GameManager::registerObject(bullet);
+  }
+  else
+  {
+    auto bullet = new Bullet(position() - Geometry::Vector(size + 10, 10), {vecx, vecy});
+    GameManager::registerObject(bullet);
+  }
+
+
 }
 
 void Player::onCollide(GameObject* otherObject) {
