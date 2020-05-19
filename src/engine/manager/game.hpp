@@ -9,6 +9,7 @@
 
 #include "engine/object/object.hpp"
 class GameManager {
+private:
   std::unordered_set<GameObject*> objectList;
   std::vector<GameObject*> insertList, deleteList;
   bool debugMode;

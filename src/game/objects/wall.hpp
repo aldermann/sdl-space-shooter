@@ -13,7 +13,7 @@ class Wall : public GameObject {
 public:
   Wall(const Geometry::Point& position, double width, double height, double angle);
 
-  void render(const Geometry::Point& position) override;
+  void render() override;
 };
 
 class Floor : public Wall {

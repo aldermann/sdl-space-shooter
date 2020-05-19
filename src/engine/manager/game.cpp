@@ -23,8 +23,8 @@ GameManager *GameManager::createInstance(bool debugMode) {
   ///
   if (GameManager::instance == nullptr) {
     GameManager::instance = new GameManager(debugMode);
+    Palette::init();
   }
-  Palette::init();
   return GameManager::instance;
 }
 

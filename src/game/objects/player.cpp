@@ -17,9 +17,9 @@ Player::Player(const Geometry::Point& position, double speed) : size(30), speed(
   dynamic = {position, 20, 0.5};
 }
 
-void Player::render(const Geometry::Point& position) {
+void Player::render() {
   Renderer* renderer = Renderer::getInstance();
-  renderer->drawCircle(Geometry::Circle(position, size), Palette::get()->Red);
+  renderer->drawCircle(Geometry::Circle(position(), size), Palette::get()->Red);
 }
 
 void Player::onKeyDown(SDL_Keycode key) {
