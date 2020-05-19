@@ -33,7 +33,7 @@ set(SOURCE_FILES src/game/main.cpp
         src/engine/physics/dynamic.cpp src/engine/physics/motion.cpp
         src/engine/physics/physics.cpp
         src/game/objects/player.cpp
-        src/game/objects/wall.cpp src/game/objects/wall.hpp src/game/objects/enemy.cpp src/game/objects/enemy.hpp src/game/objects/bullet.cpp src/game/objects/bullet.hpp src/game/objects/const.hpp)
+        src/game/objects/map.cpp src/game/objects/map.hpp src/game/objects/wall.cpp src/game/objects/wall.hpp src/game/objects/enemy.cpp src/game/objects/enemy.hpp src/game/objects/bullet.cpp src/game/objects/bullet.hpp src/game/objects/const.hpp)
 set(BINARY_NAME ${PROJECT_NAME})
 add_executable(${BINARY_NAME} ${SOURCE_FILES})
 set_target_properties(${BINARY_NAME} PROPERTIES LINKER_LANGUAGE CXX)

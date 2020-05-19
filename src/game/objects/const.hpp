@@ -8,5 +8,6 @@ enum ObjectType {
   WALL,
   FLOOR,
   PLAYER,
-  ENEMY
+  ENEMY, 
+  MAP
 };
