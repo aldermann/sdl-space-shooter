@@ -18,7 +18,7 @@ namespace Geometry {
   double Point::distance(Segment &other) const {
     Point &a = other.a;
     Point &b = other.b;
-    return abs((b.x - a.x) * this->x - (b.x - a.x) * this->y + a.y * b.x - a.x * b.y) /
+    return std::abs((b.x - a.x) * this->x - (b.x - a.x) * this->y + a.y * b.x - a.x * b.y) /
            other.length();
   }
 

@@ -27,7 +27,7 @@ GameObject::~GameObject() {
 }
 
 void GameObject::innerRender() {
-  render(position());
+  render();
   bool debugMode = GameManager::getInstance()->debugMode;
   if (debugMode) {
     boundingBox->render(position());
@@ -42,7 +42,6 @@ const Geometry::Point &GameObject::position() const {
 }
 
 void GameObject::handleCollision(GameObject *objectA, GameObject *objectB, double time) {
-
   Physics::Dynamic &aDyn = objectA->dynamic, &bDyn = objectB->dynamic;
   BoundingBox::Box *aBox = objectA->boundingBox, *bBox = objectB->boundingBox;
   if (!aBox->checkCollision(aDyn.position(), bDyn.position(), bBox)) {
@@ -60,7 +59,7 @@ void GameObject::handleCollision(GameObject *objectA, GameObject *objectB, doubl
 void GameObject::onKeyDown(SDL_Keycode) {}
 void GameObject::onKeyUp(SDL_Keycode key) {}
 void GameObject::onCollide(GameObject *otherObject) {}
-void GameObject::render(const Geometry::Point &position) {}
+void GameObject::render() {}
 void GameObject::destroy() {
   /**
    * Call this method to destroy the object.
