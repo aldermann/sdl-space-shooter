@@ -9,7 +9,10 @@
 
 class Enemy : public GameObject {
 public:
+  static int count;
   double speed;
   Color color;
   Enemy(const Geometry::Point& position, double speed, Color col);
+  void onCollide(GameObject* otherObject) override;
+  void render() override;
 };

@@ -7,9 +7,18 @@
 
 #include "engine/object/object.hpp"
 class Bullet : public GameObject {
-  void render(const Geometry::Point& pos) override;
+  void render() override;
   void onCollide(GameObject* otherObject) override;
 
 public:
-  explicit Bullet(const Geometry::Point& pos, const Geometry::Vector& velocity);
+  Bullet(const Geometry::Point& pos, const Geometry::Vector& velocity);
+};
+
+class PlayerBullet : public Bullet {
+public:
+  PlayerBullet(const Geometry::Point& pos, const Geometry::Vector& velocity);
+};
+
+class EnemyBullet : public Bullet {
+  EnemyBullet(const Geometry::Point& pos, const Geometry::Vector& velocity);
 };

@@ -4,6 +4,8 @@
 
 #include "wall.hpp"
 
+#include <iostream>
+
 #include "const.hpp"
 
 Wall::Wall(const Geometry::Point& position, double width, double height, double angle)
@@ -13,7 +15,7 @@ Wall::Wall(const Geometry::Point& position, double width, double height, double 
   dynamic = {position, false};
 }
 
-void Wall::render(const Geometry::Point& position) {
+void Wall::render() {
   Renderer::getInstance()->drawRectangle(rect, Palette::get()->Blue);
 }
 

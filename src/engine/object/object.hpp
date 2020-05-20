@@ -10,12 +10,6 @@
 #include "engine/physics/dynamic.hpp"
 
 class GameObject {
-  /**
- * Render the GameObject
- * @param time The time delta used for physics related function
- * @param renderWireFrame If true, innerRender the wireframe of the object
- * @param renderMotion If true, innerRender movement vector.
- */
   friend class GameManager;
 
 protected:
@@ -24,7 +18,7 @@ protected:
   bool solid;
 
 public:
-  int type;
+  int type = 0;
   GameObject();
   GameObject(BoundingBox::Box *bounding, Physics::Dynamic dynamic, bool solid);
   GameObject(BoundingBox::Box *bounding, const Physics::Dynamic &dynamic);
@@ -43,7 +37,7 @@ private:
 
 public:
   void destroy();
-  virtual void render(const Geometry::Point &position);
+  virtual void render();
   virtual void onKeyDown(SDL_Keycode key);
   virtual void onKeyUp(SDL_Keycode key);
   virtual void onCollide(GameObject *otherObject);

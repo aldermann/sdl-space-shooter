@@ -4,6 +4,8 @@
 
 #include "color.hpp"
 
+#include <iostream>
+
 #include "utils/error/error.hpp"
 
 Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
@@ -30,21 +32,21 @@ int Color::getAlphaHex() const {
 Palette *Palette::instance = nullptr;
 
 Palette *Palette::init() {
-  if (Palette::instance != nullptr) {
-    return Palette::instance;
+  if (instance != nullptr) {
+    return instance;
   }
-  Palette::instance = new Palette();
-  Palette::instance->Red = Color(0xFF0000);
-  Palette::instance->Orange = Color(0xFF7F00);
-  Palette::instance->Yellow = Color(0xFFFF00);
-  Palette::instance->Green = Color(0x00FF00);
-  Palette::instance->Blue = Color(0x0000FF);
-  Palette::instance->Indigo = Color(0x2E2B5F);
-  Palette::instance->Violet = Color(0x8B00FF);
-  Palette::instance->Black = Color(0x000000);
-  Palette::instance->White = Color(0xffffff);
-  Palette::instance->Grey = Color(0xBDBDBD);
-  return Palette::instance;
+  instance = new Palette();
+  instance->Red = Color(0xFF0000);
+  instance->Orange = Color(0xFF7F00);
+  instance->Yellow = Color(0xFFFF00);
+  instance->Green = Color(0x00FF00);
+  instance->Blue = Color(0x0000FF);
+  instance->Indigo = Color(0x2E2B5F);
+  instance->Violet = Color(0x8B00FF);
+  instance->Black = Color(0x000000);
+  instance->White = Color(0xffffff);
+  instance->Grey = Color(0xBDBDBD);
+  return instance;
 }
 Palette *Palette::get() {
   if (Palette::instance != nullptr) {

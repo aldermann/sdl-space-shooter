@@ -2,6 +2,7 @@
 
 #include <engine/physics/physics.hpp>
 #include <game/objects/wall.hpp>
+#include <game/timeline/spawn_enemy.hpp>
 #include <iostream>
 
 #include "engine/manager/game.hpp"
@@ -18,11 +19,12 @@ int main() {
     GameObject* floor = new Floor({600, 700}, 1200, 40, 0);
     GameObject* wall1 = new Wall({1180, 350}, 40, 700, 0);
     GameObject* wall2 = new Wall({20, 350}, 40, 700, 0);
-    game->_registerObject(ball);
-    game->_registerObject(floor);
-    game->_registerObject(wall1);
-    game->_registerObject(wall2);
-    game->loop();
+    GameManager::registerObject(ball);
+    GameManager::registerObject(floor);
+    GameManager::registerObject(wall1);
+    GameManager::registerObject(wall2);
+    game->timeline.schedule(new SpawnEnemyEvent(1));
+    GameManager::loop();
     delete ball;
     delete floor;
     GameManager::releaseInstance();

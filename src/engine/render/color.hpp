@@ -18,6 +18,7 @@ public:
   [[nodiscard]] int getHex() const;
   [[nodiscard]] int getAlphaHex() const;
 };
+
 class Palette {
 private:
   static Palette *instance;

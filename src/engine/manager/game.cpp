@@ -23,8 +23,8 @@ GameManager *GameManager::createInstance(bool debugMode) {
   ///
   if (GameManager::instance == nullptr) {
     GameManager::instance = new GameManager(debugMode);
+    Palette::init();
   }
-  Palette::init();
   return GameManager::instance;
 }
 
@@ -59,12 +59,12 @@ void GameManager::_registerObject(GameObject *object) {
   insertList.push_back(object);
 }
 
-void GameManager::_deleteObject(GameObject *ptr) {
-  auto item = objectList.find(ptr);
+void GameManager::_deleteObject(GameObject *object) {
+  auto item = objectList.find(object);
   if (item == objectList.end()) {
     throw WarningAppError("No such item");
   }
-  deleteList.push_back(ptr);
+  deleteList.push_back(object);
 }
 
 void GameManager::applyObjectListModification() {
@@ -105,7 +105,7 @@ void GameManager::handleCollision(double time) {
   }
 }
 
-void GameManager::handleEvent() {
+void GameManager::handleExternalEvent() {
   SDL_Event e;
   while (SDL_PollEvent(&e) != 0) {
     switch (e.type) {
@@ -143,7 +143,7 @@ void GameManager::waitIndefinitely() {
   }
 }
 
-void GameManager::loop() {
+void GameManager::_loop() {
   Timer timer;
   timer.start();
   long long frame = 0;
@@ -151,7 +151,8 @@ void GameManager::loop() {
   while (!quit) {
     try {
       timer.tick();
-      handleEvent();
+      handleExternalEvent();
+      timeline.run();
       handleDynamic(last_frame_duration);
       handleCollision(last_frame_duration);
       handleRender();
@@ -166,9 +167,15 @@ void GameManager::loop() {
     }
   }
 }
+
 void GameManager::registerObject(GameObject *object) {
   instance->_registerObject(object);
 }
+
 void GameManager::deleteObject(GameObject *object) {
   instance->_deleteObject(object);
+}
+
+void GameManager::loop() {
+  instance->_loop();
 }
