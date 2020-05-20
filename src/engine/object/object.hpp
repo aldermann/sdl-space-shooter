@@ -10,12 +10,6 @@
 #include "engine/physics/dynamic.hpp"
 
 class GameObject {
-  /**
- * Render the GameObject
- * @param time The time delta used for physics related function
- * @param renderWireFrame If true, innerRender the wireframe of the object
- * @param renderMotion If true, innerRender movement vector.
- */
   friend class GameManager;
 
 protected:

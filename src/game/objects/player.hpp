@@ -11,6 +11,7 @@
 class Player : public GameObject {
 private:
   double size, speed;
+  int lastShoot = 0;
   bool onAir = false;
   void jump();
 

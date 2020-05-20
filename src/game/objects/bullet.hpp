@@ -15,6 +15,7 @@ public:
 };
 
 class PlayerBullet : public Bullet {
+public:
   PlayerBullet(const Geometry::Point& pos, const Geometry::Vector& velocity);
 };
 

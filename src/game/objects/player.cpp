@@ -59,8 +59,12 @@ void Player::onKeyUp(SDL_Keycode key) {
 }
 
 void Player::shoot() {
-  auto bullet = new Bullet(position() + Geometry::Vector(size + 10, 0), {1000, 0});
-  GameManager::registerObject(bullet);
+  int time = SDL_GetTicks();
+  if (time > lastShoot + 300) {
+    lastShoot = time;
+    auto bullet = new PlayerBullet(position() + Geometry::Vector(size + 10, 0), {1000, 0});
+    GameManager::registerObject(bullet);
+  }
 }
 
 void Player::onCollide(GameObject* otherObject) {

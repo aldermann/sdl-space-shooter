@@ -22,8 +22,10 @@ set(SOURCE_FILES src/game/main.cpp
         src/utils/number.hpp src/utils/timer.hpp src/utils/error/error.hpp src/utils/error/sdl_error.hpp src/utils/utils.hpp
         src/engine/physics/dynamic.hpp src/engine/physics/motion.hpp
         src/engine/physics/physics.hpp
+        src/engine/manager/timeline.hpp
 
         src/engine/manager/game.cpp
+        src/engine/manager/timeline.cpp
         src/engine/geometry/point.cpp src/engine/geometry/point.cpp src/engine/geometry/shape.cpp src/engine/geometry/vector.cpp
         src/engine/object/object.cpp
         src/engine/object/bounding_box/bounding_box.cpp src/engine/object/bounding_box/circle_box.cpp src/engine/object/bounding_box/rectangle_box.cpp
@@ -32,11 +34,15 @@ set(SOURCE_FILES src/game/main.cpp
         src/engine/physics/dynamic.cpp src/engine/physics/motion.cpp
         src/engine/physics/physics.cpp
 
+        src/game/objects/const.hpp
         src/game/objects/player.cpp src/game/objects/player.hpp
         src/game/objects/wall.hpp src/game/objects/wall.cpp
         src/game/objects/enemy.cpp src/game/objects/enemy.hpp
         src/game/objects/bullet.cpp src/game/objects/bullet.hpp
-        src/game/objects/const.hpp)
+
+        src/game/timeline/spawn_enemy.cpp src/game/timeline/spawn_enemy.hpp
+        src/game/timeline/map_creator.cpp src/game/timeline/map_creator.hpp)
+
 set(BINARY_NAME ${PROJECT_NAME})
 add_executable(${BINARY_NAME} ${SOURCE_FILES})
 set_target_properties(${BINARY_NAME} PROPERTIES LINKER_LANGUAGE CXX)
