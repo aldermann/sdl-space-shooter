@@ -19,6 +19,7 @@ long long TimelineEvent::executeEvent() {
    */
   return 0;
 }
+TimelineEvent::~TimelineEvent() = default;
 
 TimelineEvent::TimelineEvent(const TimelineEvent& other) = default;
 
@@ -49,6 +50,8 @@ void TimelineManager::run() {
     if (nextFrame > currentFrame) {
       event->frame = nextFrame;
       newEvent.push_back(event);
+    } else {
+      delete event;
     }
     eventQueue.pop();
   }

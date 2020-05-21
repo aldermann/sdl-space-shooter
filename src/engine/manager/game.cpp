@@ -21,11 +21,11 @@ GameManager *GameManager::createInstance(bool debugMode) {
   /// new manager instance
   /// @param [bool] debugMode: set to true to draw some additional debugging tool
   ///
-  if (GameManager::instance == nullptr) {
-    GameManager::instance = new GameManager(debugMode);
+  if (instance == nullptr) {
+    instance = new GameManager(debugMode);
     Palette::init();
   }
-  return GameManager::instance;
+  return instance;
 }
 
 GameManager *GameManager::getInstance() {
@@ -33,10 +33,10 @@ GameManager *GameManager::getInstance() {
    * Get the current instance
    * Will throw a FatalAppError if the manager instance hasn't been initialized yet
    */
-  if (GameManager::instance == nullptr) {
+  if (instance == nullptr) {
     throw FatalAppError("Game instance hasn't been initialized yet");
   }
-  return GameManager::instance;
+  return instance;
 }
 
 void GameManager::releaseInstance() {
@@ -44,11 +44,15 @@ void GameManager::releaseInstance() {
    * Delete the current instance
    * Will throw a FatalAppError if the manager instance hasn't been initialized yet
    */
-  if (GameManager::instance == nullptr) {
+  if (instance == nullptr) {
     throw FatalAppError("Game instance hasn't been initialized yet");
   }
   Renderer::releaseInstance();
-  delete GameManager::instance;
+  for (auto object : instance->objectList) {
+    delete object;
+  }
+  instance->objectList.clear();
+  delete instance;
 }
 
 void GameManager::_registerObject(GameObject *object) {
@@ -133,6 +137,7 @@ void GameManager::handleKeyUp(SDL_Keycode key) {
     ob->onKeyUp(key);
   }
 }
+
 void GameManager::waitIndefinitely() {
   while (true) {
     SDL_Event a;
