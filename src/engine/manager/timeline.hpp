@@ -22,6 +22,7 @@ class TimelineEvent {
 public:
   long long frame = 0;
   explicit TimelineEvent(int frame);
+  virtual ~TimelineEvent();
   TimelineEvent(const TimelineEvent& other);
   virtual long long executeEvent();
 };
