@@ -7,5 +7,7 @@
 
 #include "engine/manager/timeline.hpp"
 class MapCreator : public TimelineEvent {
-  long long int executeEvent() override;
+  public:
+    explicit MapCreator (int frame);
+    long long int executeEvent() override;
 };

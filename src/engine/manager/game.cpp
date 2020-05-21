@@ -81,7 +81,7 @@ void GameManager::applyObjectListModification() {
 
 void GameManager::handleRender() {
   Renderer *renderer = Renderer::getInstance();
-  renderer->clearScreen(Palette::get()->White);
+  renderer->clearScreen(Palette::get()->Blue);
   for (GameObject *it : objectList) {
     it->innerRender();
   }

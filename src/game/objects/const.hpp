@@ -10,5 +10,6 @@ enum ObjectType {
   PLAYER,
   ENEMY,
   PLAYER_BULLET,
-  ENEMY_BULLET
+  ENEMY_BULLET,
+  MAP
 };
