@@ -55,6 +55,13 @@ Renderer *Renderer::getInstance() {
   return Renderer::instance;
 }
 
+SDL_Renderer* Renderer::getSDLRenderer(){
+  if (Renderer::instance == nullptr) {
+    throw FatalAppError("Renderer's instance not initialized.");
+  }
+  return Renderer::instance->sdlRenderer;
+}
+
 void Renderer::releaseInstance() {
   delete Renderer::instance;
   SDL_DestroyWindow(Renderer::window);

@@ -10,11 +10,10 @@
 #include "engine/geometry/geometry.hpp"
 
 class Renderer {
+private:
   SDL_Renderer *sdlRenderer;
   static Renderer *instance;
   static SDL_Window *window;
-
-private:
   explicit Renderer(SDL_Renderer *);
   ~Renderer();
 
@@ -22,6 +21,7 @@ public:
   static Renderer *createInstance(const std::string& title, int width, int height);
   static Renderer *getInstance();
   static void releaseInstance();
+  static SDL_Renderer* getSDLRenderer();
   void clearScreen(Color c);
   void drawCircle(const Geometry::Circle &c, Color col);
   void drawCircleBorder(const Geometry::Circle &c, Color col);
