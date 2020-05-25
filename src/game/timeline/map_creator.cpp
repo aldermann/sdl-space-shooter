@@ -1,14 +1,16 @@
 //
 // Created by Trần Công Việt An on 20/5/20.
 //
-#include <SDL_image.h>
-#include <iostream>
 #include "map_creator.hpp"
 
+#include <SDL_image.h>
+
+#include <iostream>
+
 #include "engine/manager/game.hpp"
+#include "engine/render/texture.hpp"
 #include "game/objects/const.hpp"
 #include "game/objects/wall.hpp"
-#include "game/objects/texture.hpp"
 
 const int MAP_WH = 32;
 
@@ -21,13 +23,10 @@ struct Rect {
 long long int MapCreator::executeEvent() {
   /* Background Loading */
   int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
-	if ((IMG_Init(imgFlags) & imgFlags) == 0)
-  {
-    std::cout << IMG_GetError() << '\n'; 
+  if ((IMG_Init(imgFlags) & imgFlags) == 0) {
+    std::cout << IMG_GetError() << '\n';
     return -1;
   }
-  GameManager::registerObject(new Texture("./bin/soccer.jpg", 0, 0, SCREEN_W, SCREEN_H, 0, 0));
-
 
 
   /* Map Loading */

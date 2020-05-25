@@ -73,6 +73,10 @@ namespace Geometry {
     return a.x * b.x + a.y * b.y;
   }
 
+  double Vector::angle(const Vector &a, const Vector &b) {
+    return acos(dotProduct(a, b) / (a.length() * b.length()));
+  }
+
   Vector Vector::projection(const Vector &other) const {
     const Vector otherProjection = other.normalized();
     return (*this) * otherProjection * otherProjection;

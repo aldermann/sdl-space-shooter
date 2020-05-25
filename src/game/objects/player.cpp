@@ -11,7 +11,8 @@
 #include "const.hpp"
 
 
-Player::Player(const Geometry::Point& position, double speed) : size(30), speed(speed) {
+Player::Player(const Geometry::Point& position, double speed)
+    : size(30), speed(speed), texture("assets/ball.png", 2 * size, 2 * size) {
   boundingBox = new BoundingBox::CircleBox(size);
   type = PLAYER;
   dynamic = {position, 20, 0.5};
@@ -19,7 +20,8 @@ Player::Player(const Geometry::Point& position, double speed) : size(30), speed(
 
 void Player::render() {
   Renderer* renderer = Renderer::getInstance();
-  renderer->drawCircle(Geometry::Circle(position(), size), Palette::get()->Red);
+  renderer->drawTexture(texture, position(), 0);
+  //  renderer->drawCircle(Geometry::Circle(position(), size), Palette::get()->Red);
 }
 
 void Player::onKeyDown(SDL_Keycode key) {

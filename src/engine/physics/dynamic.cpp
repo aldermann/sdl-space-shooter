@@ -50,7 +50,7 @@ namespace Physics {
     motion = motion.withVelocity({motion.velocity.x, vVelocity});
   }
   void Dynamic::render(const Geometry::Point &p) const {
-    auto renderer = Renderer::getInstance();
+    auto *renderer = Renderer::getInstance();
     renderer->drawVector(p, motion.velocity, Palette::get()->Green);
   }
 

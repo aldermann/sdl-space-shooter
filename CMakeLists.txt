@@ -39,7 +39,7 @@ set(SOURCE_FILES src/game/main.cpp
         src/game/objects/wall.hpp src/game/objects/wall.cpp
         src/game/objects/enemy.cpp src/game/objects/enemy.hpp
         src/game/objects/bullet.cpp src/game/objects/bullet.hpp
-        src/game/objects/texture.cpp src/game/objects/texture.hpp
+        src/engine/render/texture.cpp src/engine/render/texture.hpp
 
         src/game/timeline/spawn_enemy.cpp src/game/timeline/spawn_enemy.hpp
         src/game/timeline/map_creator.cpp src/game/timeline/map_creator.hpp)

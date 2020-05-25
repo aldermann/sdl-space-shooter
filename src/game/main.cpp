@@ -3,22 +3,20 @@
 #include <engine/physics/physics.hpp>
 #include <game/objects/wall.hpp>
 #include <iostream>
-#include <fstream>
 #include <vector>
-#include <string>
 
+#include "engine/manager/game.hpp"
+#include "engine/render/color.hpp"
+#include "game/objects/const.hpp"
+#include "game/objects/player.hpp"
 #include "timeline/map_creator.hpp"
 #include "timeline/spawn_enemy.hpp"
-#include "engine/manager/game.hpp"
-#include "game/objects/player.hpp"
-#include "game/objects/const.hpp"
 #include "utils/error/error.hpp"
-#include "engine/render/color.hpp"
 
 
 int main() {
-  try { 
-    auto game = GameManager::createInstance(false);
+  try {
+    auto* game = GameManager::createInstance(false);
     Renderer::createInstance("My game", SCREEN_W, SCREEN_H);
     Physics::World::init(200);
     GameObject* ball = new Player({100, 300}, 200);
