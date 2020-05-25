@@ -19,15 +19,13 @@ int main() {
     auto* game = GameManager::createInstance(false);
     Renderer::createInstance("My game", SCREEN_W, SCREEN_H);
     Physics::World::init(200);
+    // Todo: Move this into a new event
     GameObject* ball = new Player({100, 300}, 200);
     GameManager::registerObject(ball);
-    //GameObject* floor = new Floor({600, 700}, 1200, 40, 0, Palette::get()->Violet);
-    //GameManager::registerObject(floor);
+    // endTodo
     game->timeline.schedule(new MapCreator(0));
     game->timeline.schedule(new SpawnEnemyEvent(1));
     GameManager::loop();
-    delete ball;
-
     GameManager::releaseInstance();
     SDL_Quit();
   } catch (const AppError& err) {
