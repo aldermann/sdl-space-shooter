@@ -15,6 +15,7 @@ private:
   int lastShoot = 0;
   bool onAir = false;
   void jump();
+  void shoot(const Geometry::Point& target, double bulletVelocity);
   Texture texture;
 
 public:
@@ -22,7 +23,6 @@ public:
   void render() override;
   void onKeyDown(SDL_Keycode key) override;
   void onKeyUp(SDL_Keycode key) override;
-  void mouseDown(int posMouseX, int posMouseY) override;
+  void onMouseDown(const Geometry::Point  &p) override;
   void onCollide(GameObject* otherObject) override;
-  void shoot(double velx, double vely);
 };

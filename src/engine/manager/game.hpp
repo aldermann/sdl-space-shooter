@@ -37,7 +37,7 @@ private:
   void handleCollision(double time);
   void handleExternalEvent();
   void wipeObjects();
-  void handleMouseButtonDown(int posx, int posy);
+  void handleMouseButtonDown(const Geometry::Point& p);
   void reloadGameState();
 
 public:
@@ -50,8 +50,5 @@ public:
   static void deleteObject(GameObject* object);
   static void registerMultipleObjects(std::vector<GameObject*> objects);
   static void loop();
-  static GameManager* getInstance();
-  static GameManager* createInstance(bool);
-  static void releaseInstance();
-  static void waitIndefinitely();
+  static void restart();
 };

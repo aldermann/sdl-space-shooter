@@ -47,8 +47,7 @@ void GameObject::handleCollision(GameObject *objectA, GameObject *objectB, doubl
   if (!aBox->checkCollision(aDyn.position(), bDyn.position(), bBox)) {
     return;
   }
-  Geometry::Vector normalVec =
-          aBox->normalCollisionVector(aDyn.position(), bDyn.position(), bBox);
+  Geometry::Vector normalVec = aBox->normalCollisionVector(aDyn.position(), bDyn.position(), bBox);
   objectA->onCollide(objectB);
   objectB->onCollide(objectA);
   if (objectA->solid and objectB->solid) {
@@ -57,9 +56,9 @@ void GameObject::handleCollision(GameObject *objectA, GameObject *objectB, doubl
 }
 
 void GameObject::onKeyDown(SDL_Keycode) {}
-void GameObject::onKeyUp(SDL_Keycode key) {}
-void GameObject::mouseDown(int posx, int posy) {}
-void GameObject::onCollide(GameObject *otherObject) {}
+void GameObject::onKeyUp(SDL_Keycode) {}
+void GameObject::onMouseDown(const Geometry::Point &p) {}
+void GameObject::onCollide(GameObject *) {}
 void GameObject::render() {}
 void GameObject::destroy() {
   /**

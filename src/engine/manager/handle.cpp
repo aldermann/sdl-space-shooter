@@ -49,6 +49,11 @@ void GameManager::handleExternalEvent() {
       case SDL_KEYUP:
         handleKeyUp(e.key.keysym.sym);
         break;
+      case SDL_MOUSEBUTTONDOWN:
+        int mousePosX, mousePosY;
+        SDL_GetMouseState(&mousePosX, &mousePosY);
+        handleMouseButtonDown(Geometry::Point(mousePosX, mousePosY));
+        break;
     }
   }
 }
@@ -62,5 +67,11 @@ void GameManager::handleKeyDown(SDL_Keycode key) {
 void GameManager::handleKeyUp(SDL_Keycode key) {
   for (GameObject *ob : objectList) {
     ob->onKeyUp(key);
+  }
+}
+
+void GameManager::handleMouseButtonDown(const Geometry::Point &p) {
+  for (GameObject *ob : objectList) {
+    ob->onMouseDown(p);
   }
 }

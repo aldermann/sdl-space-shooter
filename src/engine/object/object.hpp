@@ -41,5 +41,5 @@ public:
   virtual void onKeyDown(SDL_Keycode key);
   virtual void onKeyUp(SDL_Keycode key);
   virtual void onCollide(GameObject *otherObject);
-  virtual void mouseDown(int posx, int posy);
+  virtual void onMouseDown(const Geometry::Point &p);
 };
