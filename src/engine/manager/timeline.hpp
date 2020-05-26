@@ -5,36 +5,25 @@
 #pragma once
 
 
+#include <functional>
 #include <queue>
 
-class TimelineEvent {
-  /**
-   * Represent a single event on a timeline
-   *
-   * @property frame: The frame number that this event is scheduled to execute
-   */
-  friend class TimelineManager;
-  class LessComparator {
-  public:
-    bool operator()(const TimelineEvent* x, const TimelineEvent* y);
-  };
-
-public:
-  long long frame = 0;
-  explicit TimelineEvent(int frame);
-  virtual ~TimelineEvent();
-  TimelineEvent(const TimelineEvent& other);
-  virtual long long executeEvent();
-};
+typedef std::function<long long int(long long int)> TimelineEventCallable;
+typedef std::pair<long long int, TimelineEventCallable> TimelineEvent;
 
 class TimelineManager {
-  std::priority_queue<TimelineEvent*, std::vector<TimelineEvent*>, TimelineEvent::LessComparator>
-          eventQueue;
+  struct EventComparer {
+    bool operator()(const TimelineEvent& a, const TimelineEvent& b);
+  };
+  std::priority_queue<TimelineEvent, std::vector<TimelineEvent>, EventComparer> eventQueue;
+  std::vector<TimelineEvent> scheduledEvent;
   long long currentFrame = 0;
 
 
 public:
+  explicit TimelineManager(std::vector<TimelineEvent> scheduledEvents);
+  explicit TimelineManager(const std::vector<TimelineEventCallable>& onStartEvents);
   void reset();
-  void schedule(TimelineEvent* event);
+  void schedule(long long int frame, const TimelineEventCallable& event);
   void run();
 };

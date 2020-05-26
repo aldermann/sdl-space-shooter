@@ -4,58 +4,49 @@
 
 #include "timeline.hpp"
 
-#include <iostream>
-TimelineEvent::TimelineEvent(int frame) : frame(frame) {}
-long long TimelineEvent::executeEvent() {
-  /**
-   * Method called upon execution of the event
-   *
-   * This method will be called upon execution of the event. You will need to override this method
-   * for every type of event you want to implement.
-   *
-   * @return a long long int. If you return a number larger than the current event frame, this event
-   * will be rescheduled at that frame. Ignore if you return any number less than or equal to the
-   * current frame
-   */
-  return 0;
-}
-TimelineEvent::~TimelineEvent() = default;
+#include <utility>
 
-TimelineEvent::TimelineEvent(const TimelineEvent& other) = default;
-
-bool TimelineEvent::LessComparator::operator()(const TimelineEvent* x, const TimelineEvent* y) {
-  return x->frame < y->frame;
-}
 
 void TimelineManager::reset() {
   currentFrame = 0;
   while (not eventQueue.empty()) {
     eventQueue.pop();
   }
-}
-
-void TimelineManager::schedule(TimelineEvent* event) {
-  eventQueue.push(event);
+  for (const TimelineEvent& e : scheduledEvent) {
+    eventQueue.push(e);
+  }
 }
 
 void TimelineManager::run() {
   ++currentFrame;
-  std::vector<TimelineEvent*> newEvent;
+  std::vector<TimelineEvent> newEvent;
   while (not eventQueue.empty()) {
-    TimelineEvent* event = eventQueue.top();
-    if (event->frame > currentFrame) {
+    TimelineEvent event = eventQueue.top();
+    if (event.first > currentFrame) {
       break;
     }
-    long long nextFrame = event->executeEvent();
+    long long nextFrame = event.second(currentFrame);
     if (nextFrame > currentFrame) {
-      event->frame = nextFrame;
-      newEvent.push_back(event);
-    } else {
-      delete event;
+      newEvent.emplace_back(nextFrame, event.second);
     }
     eventQueue.pop();
   }
-  for (TimelineEvent* e : newEvent) {
+  for (const TimelineEvent& e : newEvent) {
     eventQueue.push(e);
   }
+}
+
+void TimelineManager::schedule(long long int frame, const TimelineEventCallable& event) {
+  eventQueue.push(std::pair(frame, event));
+}
+TimelineManager::TimelineManager(std::vector<TimelineEvent> scheduledEvents)
+    : scheduledEvent(std::move(scheduledEvents)) {}
+TimelineManager::TimelineManager(const std::vector<TimelineEventCallable>& onStartEvents) {
+  for (const auto& event : onStartEvents) {
+    scheduledEvent.emplace_back(0, event);
+  }
+}
+
+bool TimelineManager::EventComparer::operator()(const TimelineEvent& a, const TimelineEvent& b) {
+  return a.first < b.first;
 }

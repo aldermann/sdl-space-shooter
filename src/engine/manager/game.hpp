@@ -11,36 +11,43 @@
 #include "timeline.hpp"
 class GameManager {
 public:
-  TimelineManager timeline;
+  friend class GameObject;
 
 private:
+  GameManager(const std::vector<TimelineEventCallable>& events, bool debugMode);
+
+  TimelineManager timeline;
   std::unordered_set<GameObject*> objectList;
   std::vector<GameObject*> insertList, deleteList;
   bool debugMode;
-  friend class GameObject;
   bool quit = false;
+  bool restartScheduled = false;
   static GameManager* instance;
-
-  explicit GameManager(bool debugMode);
-  void handleRender();
-  void handleCollision(double time);
-  void applyObjectListModification();
 
   void _registerObject(GameObject* object);
   void _deleteObject(GameObject* object);
+  void _registerMultipleObjects(std::vector<GameObject*> objects);
   void _loop();
+  void applyObjectListModification();
 
   void handleKeyDown(SDL_Keycode key);
   void handleKeyUp(SDL_Keycode key);
   void handleDynamic(double time);
+  void handleRender();
+  void handleCollision(double time);
   void handleExternalEvent();
+  void wipeObjects();
+  void reloadGameState();
 
 public:
+  static GameManager* createInstance(const std::vector<TimelineEventCallable>& events,
+                                     bool dbgMode);
+  static GameManager* getInstance();
+  static void releaseInstance();
+
   static void registerObject(GameObject* object);
   static void deleteObject(GameObject* object);
+  static void registerMultipleObjects(std::vector<GameObject*> objects);
   static void loop();
-  static GameManager* getInstance();
-  static GameManager* createInstance(bool);
-  static void releaseInstance();
-  static void waitIndefinitely();
+  static void restart();
 };

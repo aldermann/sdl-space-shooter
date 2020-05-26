@@ -21,7 +21,6 @@ Player::Player(const Geometry::Point& position, double speed)
 void Player::render() {
   Renderer* renderer = Renderer::getInstance();
   renderer->drawTexture(texture, position(), 0);
-  //  renderer->drawCircle(Geometry::Circle(position(), size), Palette::get()->Red);
 }
 
 void Player::onKeyDown(SDL_Keycode key) {
@@ -55,6 +54,8 @@ void Player::onKeyUp(SDL_Keycode key) {
     case SDLK_d:
       dynamic.setHorizontalVelocity(0);
       return;
+    case SDLK_r:
+      GameManager::restart();
     default:
       return;
   }
