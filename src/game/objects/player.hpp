@@ -14,6 +14,7 @@ private:
   int lastShoot = 0;
   bool onAir = false;
   void jump();
+  Texture texture;
 
 public:
   Player(const Geometry::Point& position, double speed);

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <SDL2/SDL_rect.h>
+
 #include <ostream>
 #include <vector>
 
@@ -55,6 +57,7 @@ namespace Geometry {
     Vector operator/(const double &scale) const;
     double operator*(const Vector &other) const;
     static double dotProduct(const Vector &a, const Vector &b);
+    static double angle(const Vector &a, const Vector &b);
     static double crossProduct(const Vector &a, const Vector &b);
 
     [[nodiscard]] double length() const;

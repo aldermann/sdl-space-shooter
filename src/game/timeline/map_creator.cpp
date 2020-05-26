@@ -1,10 +1,15 @@
 //
 // Created by Trần Công Việt An on 20/5/20.
 //
-
 #include "map_creator.hpp"
 
+#include <SDL_image.h>
+
+#include <iostream>
+
 #include "engine/manager/game.hpp"
+#include "engine/render/texture.hpp"
+#include "game/objects/const.hpp"
 #include "game/objects/wall.hpp"
 
 const int MAP_WH = 32;
@@ -16,6 +21,15 @@ struct Rect {
 };
 
 long long int MapCreator::executeEvent() {
+  /* Background Loading */
+  int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
+  if ((IMG_Init(imgFlags) & imgFlags) == 0) {
+    std::cout << IMG_GetError() << '\n';
+    return -1;
+  }
+
+
+  /* Map Loading */
   std::vector<Rect> rectCoordinate = {{0, 14, 19, 17, 1},
                                       {20, 14, 39, 17, 2},
                                       {4, 11, 6, 11, 1},

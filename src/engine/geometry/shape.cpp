@@ -73,4 +73,5 @@ namespace Geometry {
     res.push_back(center + h + w);
     return res;
   }
+
 }// namespace Geometry
