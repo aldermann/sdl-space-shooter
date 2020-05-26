@@ -37,6 +37,7 @@ private:
   void handleCollision(double time);
   void handleExternalEvent();
   void wipeObjects();
+  void handleMouseButtonDown(const Geometry::Point& p);
   void reloadGameState();
 
 public:

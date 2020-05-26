@@ -4,12 +4,11 @@
 
 #include "player.hpp"
 
-#include <engine/manager/game.hpp>
 #include <iostream>
 
 #include "bullet.hpp"
 #include "const.hpp"
-
+#include "engine/manager/game.hpp"
 
 Player::Player(const Geometry::Point& position, double speed)
     : size(30), speed(speed), texture("assets/ball.png", 2 * size, 2 * size) {
@@ -32,9 +31,6 @@ void Player::onKeyDown(SDL_Keycode key) {
     case SDLK_RIGHT:
     case SDLK_d:
       dynamic.setHorizontalVelocity(speed);
-      return;
-    case SDLK_j:
-      shoot();
       return;
     case SDLK_w:
     case SDLK_UP:
@@ -61,13 +57,20 @@ void Player::onKeyUp(SDL_Keycode key) {
   }
 }
 
-void Player::shoot() {
+void Player::shoot(const Geometry::Point& target, double bulletVelocity) {
   int time = SDL_GetTicks();
   if (time > lastShoot + 300) {
     lastShoot = time;
-    auto bullet = new PlayerBullet(position() + Geometry::Vector(size + 10, 0), {1000, 0});
+    Geometry::Vector shootDirection{position(), target};
+    shootDirection = shootDirection.normalized();
+    Geometry::Point bulletPosition = position() + shootDirection * size * 2;
+    auto bullet = new PlayerBullet(bulletPosition, shootDirection * bulletVelocity);
     GameManager::registerObject(bullet);
   }
+}
+
+void Player::onMouseDown(const Geometry::Point& p) {
+  shoot(p, 1000);
 }
 
 void Player::onCollide(GameObject* otherObject) {
