@@ -7,8 +7,5 @@
 
 #include "engine/manager/timeline.hpp"
 
-class SpawnEnemyEvent : public TimelineEvent {
-public:
-  explicit SpawnEnemyEvent(int frame);
-  long long executeEvent() override;
-};
+
+long long SpawnEnemy(long long frame);

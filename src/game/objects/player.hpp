@@ -10,7 +10,8 @@
 
 class Player : public GameObject {
 private:
-  double size, speed;
+  int size;
+  double speed;
   int lastShoot = 0;
   bool onAir = false;
   void jump();

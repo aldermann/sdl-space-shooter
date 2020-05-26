@@ -24,7 +24,7 @@ set(SOURCE_FILES src/game/main.cpp
         src/engine/physics/physics.hpp
         src/engine/manager/timeline.hpp
 
-        src/engine/manager/game.cpp
+        src/engine/manager/game.cpp src/engine/manager/manage_objects.cpp src/engine/manager/handle.cpp
         src/engine/manager/timeline.cpp
         src/engine/geometry/point.cpp src/engine/geometry/point.cpp src/engine/geometry/shape.cpp src/engine/geometry/vector.cpp
         src/engine/object/object.cpp
@@ -42,7 +42,7 @@ set(SOURCE_FILES src/game/main.cpp
         src/engine/render/texture.cpp src/engine/render/texture.hpp
 
         src/game/timeline/spawn_enemy.cpp src/game/timeline/spawn_enemy.hpp
-        src/game/timeline/map_creator.cpp src/game/timeline/map_creator.hpp)
+        src/game/timeline/game_setup.cpp src/game/timeline/game_setup.hpp )
 
 set(BINARY_NAME ${PROJECT_NAME})
 add_executable(${BINARY_NAME} ${SOURCE_FILES})
