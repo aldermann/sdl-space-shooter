@@ -2,6 +2,8 @@
 
 #include <SDL_image.h>
 
+#include <filesystem>
+
 #include "engine/render/renderer.hpp"
 #include "utils/error/sdl_error.hpp"
 
@@ -10,7 +12,7 @@ Texture::Texture(const char* path) : Texture(path, 0, 0, 0, 0, 0, 0) {}
 Texture::Texture(const char* path, int outputWidth, int outputHeight)
     : Texture(path, 0, 0, 0, 0, outputWidth, outputHeight) {}
 
-Texture::Texture(const char* path,
+Texture::Texture(const std::string& path,
                  int cropTop,
                  int cropBottom,
                  int cropLeft,
@@ -18,7 +20,8 @@ Texture::Texture(const char* path,
                  int outputWidth,
                  int outputHeight)
     : cropRect() {
-  mTexture = IMG_LoadTexture(Renderer::getSDLRenderer(), path);
+  std::filesystem::path cwd = std::filesystem::current_path();
+  mTexture = IMG_LoadTexture(Renderer::getSDLRenderer(), (cwd / path).c_str());
   if (mTexture == nullptr) {
     throw FatalSDLError();
   }

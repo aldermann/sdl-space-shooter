@@ -9,7 +9,7 @@ class Texture {
 public:
   Texture();
   explicit Texture(const char* path);
-  Texture(const char* path,
+  Texture(const std::string& path,
           int cropTop,
           int cropBottom,
           int cropLeft,
