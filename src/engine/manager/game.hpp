@@ -41,7 +41,7 @@ private:
   void reloadGameState();
 
 public:
-  static GameManager* createInstance(const std::vector<TimelineEventCallable>& events,
+  static GameManager* createInstance(const std::vector<TimelineEventCallable>& onStartEvents,
                                      bool dbgMode);
   static GameManager* getInstance();
   static void releaseInstance();

@@ -20,7 +20,7 @@ int main() {
     std::vector<TimelineEventCallable> onStartEvents{&GameSetup, &SpawnEnemy};
     GameManager::createInstance(onStartEvents, false);
     Renderer::createInstance("My game", SCREEN_W, SCREEN_H);
-    Physics::World::init(200);
+    Physics::World::init(0);
     GameManager::loop();
     GameManager::releaseInstance();
     SDL_Quit();

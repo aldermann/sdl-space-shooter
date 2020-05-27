@@ -39,6 +39,7 @@ void TimelineManager::run() {
 void TimelineManager::schedule(long long int frame, const TimelineEventCallable& event) {
   eventQueue.push(std::pair(frame, event));
 }
+
 TimelineManager::TimelineManager(std::vector<TimelineEvent> scheduledEvents)
     : scheduledEvent(std::move(scheduledEvents)) {}
 TimelineManager::TimelineManager(const std::vector<TimelineEventCallable>& onStartEvents) {

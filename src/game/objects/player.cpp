@@ -34,8 +34,11 @@ void Player::onKeyDown(SDL_Keycode key) {
       return;
     case SDLK_w:
     case SDLK_UP:
-    case SDLK_SPACE:
-      jump();
+      dynamic.setVerticalVelocity(-speed);
+      return;
+    case SDLK_s:
+    case SDLK_DOWN:
+      dynamic.setVerticalVelocity(speed);
       return;
     default:
       return;
@@ -49,9 +52,13 @@ void Player::onKeyUp(SDL_Keycode key) {
     case SDLK_RIGHT:
     case SDLK_d:
       dynamic.setHorizontalVelocity(0);
-      return;
-    case SDLK_r:
-      GameManager::restart();
+      break;
+    case SDLK_UP:
+    case SDLK_w:
+    case SDLK_DOWN:
+    case SDLK_s:
+      dynamic.setVerticalVelocity(0);
+      break;
     default:
       return;
   }
@@ -77,6 +84,9 @@ void Player::onCollide(GameObject* otherObject) {
   switch (otherObject->type) {
     case FLOOR:
       onAir = false;
+      break;
+    case ENEMY_BULLET:
+      destroy();
       break;
   }
 }

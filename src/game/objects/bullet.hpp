@@ -20,5 +20,6 @@ public:
 };
 
 class EnemyBullet : public Bullet {
+public:
   EnemyBullet(const Geometry::Point& pos, const Geometry::Vector& velocity);
 };

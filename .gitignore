@@ -18,3 +18,4 @@ _deps
 *.cbp
 bin/*
 !bin/.bin_dir
+!bin/assets

@@ -11,8 +11,10 @@ class Enemy : public GameObject {
 public:
   static int count;
   double speed;
+  int lastShoot = 0;
   Color color;
   Enemy(const Geometry::Point& position, double speed, Color col);
   void onCollide(GameObject* otherObject) override;
   void render() override;
+  void shoot();
 };

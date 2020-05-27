@@ -21,16 +21,17 @@ GameManager::GameManager(const std::vector<TimelineEventCallable> &events, bool 
 }
 GameManager *GameManager::instance = nullptr;
 
-GameManager *GameManager::createInstance(const std::vector<TimelineEventCallable> &events,
+GameManager *GameManager::createInstance(const std::vector<TimelineEventCallable> &onStartEvents,
                                          bool dbgMode) {
   /**
   * Create new manager instance
+  * @param onStartEvents: events that must be called on game start or game restart
   * @param [bool] debugMode: set to true to draw some additional debugging tool
   */
 
 
   if (instance == nullptr) {
-    instance = new GameManager(events, dbgMode);
+    instance = new GameManager(onStartEvents, dbgMode);
     Palette::init();
   }
   instance->reloadGameState();
