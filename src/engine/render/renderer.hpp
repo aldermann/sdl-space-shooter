@@ -14,12 +14,14 @@ class Renderer {
 
 private:
   static Renderer *instance;
-  Renderer(SDL_Renderer *renderer, SDL_Window *window);
+  Renderer(SDL_Renderer *renderer, SDL_Window *window, int w, int h);
   ~Renderer();
 
 private:
   SDL_Renderer *sdlRenderer;
   SDL_Window *window;
+  Texture *background;
+  int w, h;
 
 
 public:
@@ -35,9 +37,11 @@ public:
   void drawCircleBorder(const Geometry::Circle &c, Color col);
   void present();
   void setDrawColor(Color c);
+  void setBackground(const std::string &path);
   void drawRectangle(const Geometry::Rectangle &r, Color col);
   void drawRectangleBorder(const Geometry::Rectangle &r, Color col);
   void drawSegment(const Geometry::Segment &s, double thickness, Color col);
   void drawVector(const Geometry::Point &position, const Geometry::Vector &v, Color col);
   void drawTexture(const Texture &texture, const Geometry::Point &position, double angle);
+  void clearBackground();
 };

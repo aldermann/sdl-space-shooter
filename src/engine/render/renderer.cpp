@@ -1,6 +1,4 @@
 //
-// Created by Trần Công Việt An on 1/5/20.
-//
 
 #include "renderer.hpp"
 
@@ -16,8 +14,8 @@
 #include "utils/timer.hpp"
 #include "utils/utils.hpp"
 
-Renderer::Renderer(SDL_Renderer *renderer, SDL_Window *window)
-    : sdlRenderer(renderer), window(window) {
+Renderer::Renderer(SDL_Renderer *renderer, SDL_Window *window, int w, int h)
+    : sdlRenderer(renderer), window(window), background(nullptr), w(w), h(h) {
   IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
 }
 Renderer::~Renderer() {
@@ -50,7 +48,7 @@ Renderer *Renderer::createInstance(const std::string &title, int width, int heig
     if (SDL_SetRenderDrawBlendMode(render, SDL_BLENDMODE_BLEND)) {
       throw FatalSDLError();
     }
-    instance = new Renderer(render, window);
+    instance = new Renderer(render, window, width, height);
   }
   return instance;
 }
@@ -87,6 +85,9 @@ void Renderer::clearScreen(Color c) {
   int ok = SDL_RenderClear(sdlRenderer);
   if (ok < 0) {
     throw FatalSDLError();
+  }
+  if (background != nullptr) {
+    this->drawTexture(*background, {w / 2.0, h / 2.0}, 0);
   }
 }
 
@@ -143,13 +144,22 @@ void Renderer::drawVector(const Geometry::Point &position, const Geometry::Vecto
   drawSegment({position, endPoint}, 5, col);
 }
 
-void Renderer::drawTexture(const Texture &texture, const Geometry::Point &position, double angle) {
-  SDL_Rect renderArea = texture.getRenderArea(position);
+void Renderer::drawTexture(const Texture &tx, const Geometry::Point &position, double angle) {
+  SDL_Rect renderArea = tx.getRenderArea(position);
   SDL_RenderCopyEx(sdlRenderer,
-                   texture.mTexture,
-                   &texture.cropRect,
+                   tx.mTexture,
+                   &tx.cropRect,
                    &renderArea,
                    angle,
                    nullptr,
                    SDL_FLIP_NONE);
+}
+
+void Renderer::setBackground(const std::string &path) {
+  delete background;
+  background = new Texture(path, 0, 0, 0, 0, w, h);
+}
+
+void Renderer::clearBackground() {
+  delete background;
 }

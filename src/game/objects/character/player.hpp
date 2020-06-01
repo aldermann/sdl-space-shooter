@@ -7,6 +7,8 @@
 
 #include <engine/object/object.hpp>
 
+#include "healthbar.hpp"
+
 
 class Player : public GameObject {
 private:
@@ -17,9 +19,10 @@ private:
   void jump();
   void shoot(const Geometry::Point& target, double bulletVelocity);
   Texture texture;
+  Healthbar* healthbar;
 
 public:
-  Player(const Geometry::Point& position, double speed);
+  Player(const Geometry::Point& position, double speed, Healthbar* health);
   void render() override;
   void onKeyDown(SDL_Keycode key) override;
   void onKeyUp(SDL_Keycode key) override;
