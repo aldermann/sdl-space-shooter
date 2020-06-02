@@ -51,4 +51,5 @@ public:
   static void registerMultipleObjects(std::vector<GameObject*> objects);
   static void loop();
   static void restart();
+  void handleTick(double duration);
 };

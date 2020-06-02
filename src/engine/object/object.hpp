@@ -38,6 +38,7 @@ private:
 public:
   void destroy();
   virtual void render();
+  virtual void tick(double delta);
   virtual void onKeyDown(SDL_Keycode key);
   virtual void onKeyUp(SDL_Keycode key);
   virtual void onCollide(GameObject *otherObject);
