@@ -12,6 +12,10 @@ Texture::Texture(const char* path) : Texture(path, 0, 0, 0, 0, 0, 0) {}
 Texture::Texture(const char* path, int outputWidth, int outputHeight)
     : Texture(path, 0, 0, 0, 0, outputWidth, outputHeight) {}
 
+// Build texture with grid 32x32
+Texture::Texture(const char* path, int leftX, int leftY, int rightX, int rightY)  
+    : Texture(path, 0, 0, 0, 0, (rightX - leftX + 1) * 32, (rightY - leftY + 1) * 32){}
+
 Texture::Texture(const std::string& path,
                  int cropTop,
                  int cropBottom,

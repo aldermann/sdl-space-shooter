@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include "const.hpp"
+#include "game/objects/character/const.hpp"
 
 Wall::Wall(const Geometry::Point& position, double width, double height, double angle, Color col)
     : rect(position, width, height, angle), col(col) {

@@ -10,11 +10,12 @@
 #include "const.hpp"
 #include "engine/manager/game.hpp"
 
-Player::Player(const Geometry::Point& position, double speed)
+Player::Player(const Geometry::Point& position, double speed, Healthbar* health)
     : size(30), speed(speed), texture("assets/ball.png", 2 * size, 2 * size) {
   boundingBox = new BoundingBox::CircleBox(size);
   type = PLAYER;
   dynamic = {position, 20, 0.5};
+  this->healthbar = health;
 }
 
 void Player::render() {
@@ -86,7 +87,10 @@ void Player::onCollide(GameObject* otherObject) {
       onAir = false;
       break;
     case ENEMY_BULLET:
-      destroy();
+      this->healthbar->reduceHealth(1);
+      if (this->healthbar->currentHealth <= 0) {
+        this->destroy();
+      }
       break;
   }
 }

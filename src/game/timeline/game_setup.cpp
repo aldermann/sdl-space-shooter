@@ -5,13 +5,14 @@
 
 #include <SDL_image.h>
 
-#include <game/objects/player.hpp>
+#include <game/objects/character/player.hpp>
 #include <iostream>
 
 #include "engine/manager/game.hpp"
 #include "engine/render/texture.hpp"
-#include "game/objects/const.hpp"
-#include "game/objects/wall.hpp"
+#include "game/objects/character/const.hpp"
+#include "game/objects/env/background.hpp"
+#include "game/objects/env/wall.hpp"
 
 const int MAP_WH = 32;
 
@@ -28,22 +29,49 @@ Floor* buildFloor(int leftX, int leftY, int rightX, int rightY, const Color& col
   return new Floor({centerX, centerY}, width, height, 0, col);
 }
 
+Background* buildImage(const char* path, int leftX, int leftY, int rightX, int rightY) {
+  double posX = leftX * MAP_WH;
+  double posY = leftY * MAP_WH;
+
+  double outputW = (rightX - leftX + 1) * MAP_WH;
+  double outputH = (rightY - leftY + 1) * MAP_WH;
+
+  double centerX = posX + outputW / 2;
+  double centerY = posY + outputH / 2;
+
+  return new Background(path, {centerX, centerY}, outputW, outputH);
+}
+
 void setupMap() {
   Color black = Palette::get()->Black, white = Palette::get()->White;
 
-  std::vector<GameObject*> objects = {buildFloor(0, 14, 19, 17, white),
-                                      buildFloor(20, 14, 39, 17, black),
-                                      buildFloor(4, 11, 6, 11, white),
-                                      buildFloor(7, 9, 9, 9, white),
-                                      buildFloor(29, 10, 31, 10, black),
-                                      buildFloor(31, 11, 34, 11, black),
-                                      buildFloor(11, 7, 19, 7, black),
-                                      buildFloor(20, 7, 28, 7, white)};
+  std::vector<GameObject*> objects = {
+          // buildFloor(0, 14, 19, 17, white),
+          // buildFloor(20, 14, 39, 17, black),
+          // buildFloor(4, 11, 6, 11, white),
+          // buildFloor(7, 9, 9, 9, white),
+          // buildFloor(29, 10, 31, 10, black),
+          // buildFloor(31, 11, 34, 11, black),
+          // buildFloor(11, 7, 19, 7, black),
+          // buildFloor(20, 7, 28, 7, white),
+          buildFloor(-1, -1, 40, -1, white),
+          buildFloor(-1, 0, -1, 17, white),
+          buildFloor(-1, 18, 40, 18, black),
+          buildFloor(40, 0, 40, 17, black),
+//          buildImage("assets/heart-256x256.png", 38, 0, 39, 1),
+//          buildImage("assets/heart-256x256.png", 36, 0, 37, 1),
+//          buildImage("assets/heart-256x256.png", 34, 0, 35, 1),
+//          buildImage("assets/heart-256x256.png", 32, 0, 33, 1),
+//          buildImage("assets/heart-256x256.png", 30, 0, 31, 1),
+  };
   GameManager::registerMultipleObjects(objects);
+  Renderer::getInstance()->setBackground("assets/space.jpg");
 }
 
 void setupCharacters() {
-  GameManager::registerObject(new Player({100, 300}, 200));
+  auto healthbar = new Healthbar();
+  GameManager::registerObject(new Player({100, 300}, 200, healthbar));
+  GameManager::registerObject(healthbar);
 }
 
 long long int GameSetup(long long) {

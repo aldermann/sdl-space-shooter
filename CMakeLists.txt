@@ -34,15 +34,16 @@ set(SOURCE_FILES src/game/main.cpp
         src/engine/physics/dynamic.cpp src/engine/physics/motion.cpp
         src/engine/physics/physics.cpp
 
-        src/game/objects/const.hpp
-        src/game/objects/player.cpp src/game/objects/player.hpp
-        src/game/objects/wall.hpp src/game/objects/wall.cpp
-        src/game/objects/enemy.cpp src/game/objects/enemy.hpp
-        src/game/objects/bullet.cpp src/game/objects/bullet.hpp
+        src/game/objects/character/const.hpp
+        src/game/objects/character/player.cpp src/game/objects/character/player.hpp
+        src/game/objects/env/wall.hpp src/game/objects/env/wall.cpp
+        src/game/objects/character/enemy.cpp src/game/objects/character/enemy.hpp
+        src/game/objects/character/bullet.cpp src/game/objects/character/bullet.hpp
+        src/game/objects/env/background.cpp src/game/objects/env/background.hpp
         src/engine/render/texture.cpp src/engine/render/texture.hpp
 
         src/game/timeline/spawn_enemy.cpp src/game/timeline/spawn_enemy.hpp
-        src/game/timeline/game_setup.cpp src/game/timeline/game_setup.hpp )
+        src/game/timeline/game_setup.cpp src/game/timeline/game_setup.hpp src/game/objects/character/healthbar.cpp src/game/objects/character/healthbar.hpp)
 
 set(BINARY_NAME ${PROJECT_NAME})
 add_executable(${BINARY_NAME} ${SOURCE_FILES})

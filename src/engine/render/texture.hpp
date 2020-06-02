@@ -17,6 +17,7 @@ public:
           int outputWidth,
           int outputHeight);
   Texture(const char* path, int outputWidth, int outputHeight);
+  Texture(const char* path, int leftX, int leftY, int rightX, int rightY);
   ~Texture();
   friend class Renderer;
 
