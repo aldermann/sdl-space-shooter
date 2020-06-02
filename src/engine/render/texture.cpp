@@ -1,6 +1,7 @@
 #include "texture.hpp"
 
 #include <SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <filesystem>
 
@@ -34,6 +35,28 @@ Texture::Texture(const std::string& path,
   cropRect.w = imageW - cropLeft - cropRight;
   this->outputHeight = outputHeight ? outputHeight : cropRect.h;
   this->outputWidth = outputWidth ? outputWidth : cropRect.w;
+}
+
+Texture::Texture( std::string textureText, SDL_Color textColor ):cropRect{0, 0, 0, 0}
+{
+	// Render xâu lên surface
+	SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
+	if( textSurface == NULL )
+	  std::cerr << "Unable to render text surface! SDL_ttf Error : " << TTF_GetError(); 
+	else
+	{
+		// Tạo Texture từ Surface
+    mTexture = SDL_CreateTextureFromSurface(Renderer::getSDLRenderer(), textSurface );
+		if( mTexture == NULL )
+			std::cerr <<  "Unable to create texture from rendered text! SDL Error: "<<  SDL_GetError();
+		else
+		{
+			outputWidth = textSurface->w;
+			outputHeight = textSurface->h;
+		}
+
+		SDL_FreeSurface( textSurface );
+	}
 }
 
 Texture::~Texture() {

@@ -12,6 +12,7 @@
 #include "engine/render/texture.hpp"
 #include "game/objects/const.hpp"
 #include "game/objects/wall.hpp"
+#include "game/objects/score.hpp"
 
 const int MAP_WH = 32;
 
@@ -40,6 +41,7 @@ void setupMap() {
                                       buildFloor(11, 7, 19, 7, black),
                                       buildFloor(20, 7, 28, 7, white)};
   GameManager::registerMultipleObjects(objects);
+  GameManager::registerObject(new Score());
 }
 
 void setupCharacters() {

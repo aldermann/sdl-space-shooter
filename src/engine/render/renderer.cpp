@@ -5,6 +5,7 @@
 #include "renderer.hpp"
 
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <chrono>
 #include <iostream>
@@ -19,11 +20,13 @@
 Renderer::Renderer(SDL_Renderer *renderer, SDL_Window *window)
     : sdlRenderer(renderer), window(window) {
   IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
+  TTF_Init();
 }
 Renderer::~Renderer() {
   SDL_DestroyRenderer(sdlRenderer);
   SDL_DestroyWindow(window);
   IMG_Quit();
+  TTF_Quit();
 }
 
 Renderer *Renderer::instance = nullptr;
