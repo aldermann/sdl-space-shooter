@@ -67,3 +67,4 @@ void GameObject::destroy() {
    */
   GameManager::deleteObject(this);
 }
+void GameObject::tick(double delta) {}

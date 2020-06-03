@@ -9,7 +9,7 @@
 
 long long SpawnEnemy(long long frame) {
   if (Enemy::count < 5) {
-    auto *enemy = new Enemy({1000, 100}, 50, Palette::get()->Yellow);
+    auto *enemy = new Enemy({1000, 300}, 50, Palette::get()->Yellow);
     ++Enemy::count;
     GameManager::registerObject(enemy);
   }

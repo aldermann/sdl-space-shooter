@@ -7,6 +7,7 @@
 #include <engine/physics/physics.hpp>
 #include <iostream>
 #include <utility>
+#include <utils/random.hpp>
 
 #include "utils/error/error.hpp"
 #include "utils/timer.hpp"
@@ -29,10 +30,10 @@ GameManager *GameManager::createInstance(const std::vector<TimelineEventCallable
   * @param [bool] debugMode: set to true to draw some additional debugging tool
   */
 
-
   if (instance == nullptr) {
     instance = new GameManager(onStartEvents, dbgMode);
     Palette::init();
+    Random::initialize();
   }
   instance->reloadGameState();
   return instance;
@@ -75,6 +76,7 @@ void GameManager::_loop() {
       timer.tick();
       handleExternalEvent();
       timeline.run();
+      handleTick(last_frame_duration);
       handleDynamic(last_frame_duration);
       handleCollision(last_frame_duration);
       handleRender();
@@ -101,4 +103,9 @@ void GameManager::reloadGameState() {
 
 void GameManager::restart() {
   instance->restartScheduled = true;
+}
+void GameManager::handleTick(double duration) {
+  for (auto *obj : objectList) {
+    obj->tick(duration);
+  }
 }

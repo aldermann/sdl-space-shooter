@@ -43,7 +43,7 @@ set(SOURCE_FILES src/game/main.cpp
         src/engine/render/texture.cpp src/engine/render/texture.hpp
 
         src/game/timeline/spawn_enemy.cpp src/game/timeline/spawn_enemy.hpp
-        src/game/timeline/game_setup.cpp src/game/timeline/game_setup.hpp src/game/objects/character/healthbar.cpp src/game/objects/character/healthbar.hpp)
+        src/game/timeline/game_setup.cpp src/game/timeline/game_setup.hpp src/game/objects/character/healthbar.cpp src/game/objects/character/healthbar.hpp src/utils/random.cpp src/utils/random.hpp)
 
 set(BINARY_NAME ${PROJECT_NAME})
 add_executable(${BINARY_NAME} ${SOURCE_FILES})
