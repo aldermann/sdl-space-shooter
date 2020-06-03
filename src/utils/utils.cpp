@@ -5,6 +5,9 @@
 // Created by Trần Công Việt An on 1/5/20.
 //
 
+#include "utils.hpp"
+
+#include <algorithm>
 #include <iostream>
 
 #include "SDL.h"
@@ -31,4 +34,13 @@ double signum(double a) {
 
 bool doubleEqual(const double &a, const double &b) {
   return (abs(a - b) < 1e-6);
+}
+
+boost::filesystem::path getParentPath(const boost::filesystem::path &p) {
+  const std::string &m = p.string();
+  const std::string slash("/");
+  auto last_slash(
+          std::find_end(std::cbegin(m), std::cend(m), std::cbegin(slash), std::cend(slash)));
+  const std::string parent(m.begin(), last_slash);
+  return boost::filesystem::path(parent);
 }

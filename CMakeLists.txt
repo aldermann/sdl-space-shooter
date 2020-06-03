@@ -52,7 +52,7 @@ set_target_properties(${BINARY_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_compile_options(${BINARY_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
 target_compile_options(${BINARY_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror -Wno-unused-parameter>)
 
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
     target_link_libraries(${BINARY_NAME} ${Boost_LIBRARIES})

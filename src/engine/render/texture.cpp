@@ -2,7 +2,9 @@
 
 #include <SDL_image.h>
 
-#include <filesystem>
+#include <boost/dll.hpp>
+#include <boost/filesystem.hpp>
+#include <utils/utils.hpp>
 
 #include "engine/render/renderer.hpp"
 #include "utils/error/sdl_error.hpp"
@@ -13,8 +15,8 @@ Texture::Texture(const char* path, int outputWidth, int outputHeight)
     : Texture(path, 0, 0, 0, 0, outputWidth, outputHeight) {}
 
 // Build texture with grid 32x32
-Texture::Texture(const char* path, int leftX, int leftY, int rightX, int rightY)  
-    : Texture(path, 0, 0, 0, 0, (rightX - leftX + 1) * 32, (rightY - leftY + 1) * 32){}
+Texture::Texture(const char* path, int leftX, int leftY, int rightX, int rightY)
+    : Texture(path, 0, 0, 0, 0, (rightX - leftX + 1) * 32, (rightY - leftY + 1) * 32) {}
 
 Texture::Texture(const std::string& path,
                  int cropTop,
@@ -24,8 +26,9 @@ Texture::Texture(const std::string& path,
                  int outputWidth,
                  int outputHeight)
     : cropRect() {
-  std::filesystem::path cwd = std::filesystem::current_path();
-  mTexture = IMG_LoadTexture(Renderer::getSDLRenderer(), (cwd / path).c_str());
+  auto cwd = boost::dll::program_location();
+  mTexture = IMG_LoadTexture(Renderer::getSDLRenderer(),
+                             (getParentPath(cwd).string() + "/" + path).c_str());
   if (mTexture == nullptr) {
     throw FatalSDLError();
   }

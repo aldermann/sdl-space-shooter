@@ -4,10 +4,10 @@
 
 #include "enemy.hpp"
 
-#include <engine/manager/game.hpp>
-
 #include "bullet.hpp"
 #include "const.hpp"
+#include "engine/manager/game.hpp"
+
 int Enemy::count = 0;
 Enemy::Enemy(const Geometry::Point& position, double speed, Color col)
     : GameObject(new BoundingBox::CircleBox(30), position, 5, 0.3, true), speed(speed), color(col) {
